@@ -11,19 +11,29 @@ export class Usuario {
     public IDUsuario: number
     public email: string
     private senha: string
-    public listaLikes:Map<string,Map<number,number>> = new Map<string,Map<number, number>>
-    public listaDeslikes:Map<string, number[]> = new Map<string,number[]>
+    /**
+     * Posts likes
+     * lista todos os likes dados pelo usuário, usando um map, que organiza as informações da seguinte forma:
+     * Map<Tipo da postagem, [IDs da postagens] >
+     * 
+     */
+    public postsLikes:Map<string,number[]> = new Map<string,number[]>
+    public postsDeslikes:Map<string,number[]> = new Map<string,number[]>
+    
+    
+    public comentsLikes:Map<string,Map<number,number>> 
+    public comentsDeslikes:Map<string,Map<number,number>>
     constructor(nome: string, IDUsuario: number, email: string, senha: string) {
         this.nome = nome
         this.IDUsuario = IDUsuario
         this.email = email
         this.senha = senha
-        this.listaLikes.set('Postagem', new Map())
-        this.listaLikes.set('Aula', new Map())
-        this.listaLikes.set('CursoInterno', new Map())
-        this.listaLikes.set('CursoExterno', new Map())
-        this.listaLikes.set('Comentario', new Map())
-        this.listaLikes.set('Resposta', new Map())
+        this.postsLikes.set('Postagem', new Map())
+        this.postsLikes.set('Aula', new Map())
+        this.postsLikes.set('CursoInterno', new Map())
+        this.postsLikes.set('CursoExterno', new Map())
+        this.postsLikes.set('Comentario', new Map())
+        this.postsLikes.set('Resposta', new Map())
     }
 
     alterarSenha(senhaNova: string,senhaVerifica:string):void{
@@ -49,33 +59,37 @@ export class Usuario {
         this.processarLike(comentario,IDPertencente)
     }
 
-    processarLike(classe:Comentario | CursoExterno | CursoInterno | Aula | Postagem, IDChave:number):void{
+    processarLike(classe:Comentario | CursoExterno | CursoInterno | Aula | Postagem | Resposta, IDChave:number):void{
         if(classe instanceof Comentario){
-            this.listaLikes.forEach( (value,key)=> {
+            this.postsLikes.forEach( (value,key)=> {
                 if(key === 'Comentarios'){
-                    value.set(IDChave,classe.IDComentario)
+                    if(value.indexOf(IDChave) > -1){
+                        value.splice(value.indexOf(IDChave),1)
+                    } else{
+                        value.push(IDChave,classe.IDComentario)
+                    }
                 }
             }); 
         } else if(classe instanceof CursoExterno){
-            this.listaLikes.forEach( (value,key)=> {
+            this.postsLikes.forEach( (value,key)=> {
                 if(key === 'CursoExterno'){
                     value.set(IDChave,classe.IDPostagem)
                 }
             }); 
         }else if(classe instanceof CursoInterno){
-            this.listaLikes.forEach( (value,key)=> {
+            this.postsLikes.forEach( (value,key)=> {
                 if(key === 'CursoInterno'){
                     value.set(IDChave,classe.IDPostagem)
                 }
             }); 
         }else if(classe instanceof Aula){
-            this.listaLikes.forEach( (value,key)=> {
+            this.postsLikes.forEach( (value,key)=> {
                 if(key === 'Aula'){
                     value.set(IDChave,classe.IDPostagem)
                 }
             }); 
         }else if(classe instanceof Postagem){
-            this.listaLikes.forEach( (value,key)=> {
+            this.postsLikes.forEach( (value,key)=> {
                 if(key === 'Postagem'){
                     value.set(IDChave,classe.IDPostagem)
                 }
@@ -84,6 +98,6 @@ export class Usuario {
     }
 
     verificarLike(chave:string,IDChave:number,IDValor:number):boolean{
-        return this.listaLikes.get(chave)?.get(IDChave) === IDValor
+        return this.postsLikes.get(chave)?.get(IDChave) === IDValor
     }
 }

@@ -1,4 +1,5 @@
 
+import { Comentario } from "../Comentario"
 import { Usuario } from "../Usuario"
 
 let date = new Date()
@@ -10,6 +11,8 @@ export class Postagem{
     public nome:string
     public titulo:string
     public descricao:string
+    public comentarios:Comentario[]
+    public idsRemovComent:number
     public datas:string[]
     public anexos:string[]
     public deslikes:number

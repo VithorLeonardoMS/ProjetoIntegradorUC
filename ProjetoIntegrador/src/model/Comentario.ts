@@ -6,14 +6,17 @@ import { Usuario } from "./Usuario"
 var leitor = require('readline-sync')
 
 export class Comentario {
-    likes: number
-    deslikes: number
-    IDUsuario: number
-    IDComentario: number
-    IDPostagem: number
-    respostas: Array<Resposta> = []
+    public likes: number = 0
+    public deslikes: number = 0
+    public IDUsuario: number
+    public IDComentario: number
+    public IDPostagem: number
+    public comentarioString:string
+    public respostas: Resposta[] = []
+    public idsRemovResp:number = 0
    
-    constructor(IDUsuario, IDComentario: number, IDPostagem: number) {
+    constructor(IDUsuario, IDComentario: number, IDPostagem: number, comentarioString:string) {
+        this.comentarioString = comentarioString
         this.IDUsuario = IDUsuario
         this.IDComentario = IDComentario
         this.IDPostagem = IDPostagem
@@ -22,22 +25,33 @@ export class Comentario {
     getComentarioSimples():string{
         return(`
         ID_Comentario: ${this.IDComentario}
-        Likes: ${this.likes}
-        Deslikes: ${this.deslikes}`);
+        ${this.comentarioString}
+        Likes: ${this.likes}    Deslikes: ${this.deslikes}`);
     }
 
-    criarResposta(): void {
-        let comentar = leitor.question(`Digite a resposta: `)
-        comentar = new Resposta(this.IDPostagem, this.respostas.length)
-        this.respostas.push(comentar)
+    getComentRespostas():string{
+        return this.respostas.reduce((acumulador,respostaAtual)=> {return acumulador += respostaAtual.getRespostaSimples()},'')
+    }
+
+    responderThis(idUsRespondendo:number): void {//usuario externo respondendo o comentário atual
+        let resposta = leitor.question(`Digite o comentario: @${listaUsuarios.find(usAtual => usAtual.IDUsuario === idUsRespondendo)?.nome/*UsRespndo.nome */} `)
+        resposta = new Resposta(idUsRespondendo,this.definirIDResp(),this.IDPostagem,this.IDComentario,resposta)
+        this.respostas.push(resposta)
+    }
+
+    responderResposta(idResposta:number,idUsRespondendo:number):void{//usuario externo respondendo uma das respostas deste comentário
+
+        let findComent = this.respostas.find(respAtual => respAtual.IDResposta == idResposta)
+        let reposta = leitor.question(`Digite o comentario: @${listaUsuarios.find(usAtual => usAtual.IDUsuario === findComent?.IDUsuario)?.nome} `)
+        this.respostas.push(new Resposta(idUsRespondendo,this.definirIDResp(), this.IDPostagem,this.IDComentario ,reposta))
     }
 
     darLikeComent():void{
         this.likes++
     }
 
-    darDeslikeComent(usuarioPortador:Usuario){
-        let teste = usuarioPortador?.IDDeslikes.get('Comentario')?.find(idEncontrado => idEncontrado === this.IDComentario)
+    darDeslikeComent(usuarioPortador:Usuario):void{
+        let teste = usuarioPortador?.listaDeslikes.get('Comentario')?.find(idEncontrado => idEncontrado === this.IDComentario)
         if(teste){
             usuarioPortador
 
@@ -64,6 +78,9 @@ export class Comentario {
         }
     }
 
+    private definirIDResp():number{
+        return this.respostas.length + this.idsRemovResp
+    }
 
 }
 
