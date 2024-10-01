@@ -7,7 +7,6 @@ let dataAtual = `${date.getFullYear()}-${date.getDate()}-${date.getMonth() + 1}`
 
 export class Postagem{
     public IDPostagem:number
-    public ID:number
     public nome:string
     public titulo:string
     public descricao:string
@@ -18,9 +17,8 @@ export class Postagem{
     public deslikes:number
     public likes:number
 
-    constructor(IDPostagem:number, ID:number, nome:string, titulo:string, descricao:string, data:string, anexos:string[]){
+    constructor(IDPostagem:number, nome:string, titulo:string, descricao:string, data:string, anexos:string[]){
         this.IDPostagem = IDPostagem
-        this.ID = ID
         this.nome = nome
         this.titulo = titulo
         this.descricao = descricao

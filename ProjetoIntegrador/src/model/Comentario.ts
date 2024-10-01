@@ -38,8 +38,12 @@ export class Comentario {
         resposta = new Resposta(idUsRespondendo,this.definirIDResp(),this.IDPostagem,this.IDComentario,resposta)
         this.respostas.push(resposta)
     }
-
-    responderResposta(idResposta:number,idUsRespondendo:number):void{//usuario externo respondendo uma das respostas deste comentário
+    /**
+     * responderResposta() -> Responde uma outra resposta, armazena ambas no comentário principal, mas ainda referência a resposta respondida
+     * @param {number} idResposta  -> ID da resposta que será respondida
+     * @param {number} idUsRespondendo:number  -> ID do usuario que está respondendo a resposta
+     */
+    responderResposta(idResposta:number,idUsRespondendo:number):void{
 
         let findComent = this.respostas.find(respAtual => respAtual.IDResposta == idResposta)
         let reposta = leitor.question(`Digite o comentario: @${listaUsuarios.find(usAtual => usAtual.IDUsuario === findComent?.IDUsuario)?.nome} `)

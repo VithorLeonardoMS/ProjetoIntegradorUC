@@ -8,14 +8,18 @@ export class Resposta{
     public deslikes: number = 0
     public IDUsuario: number
     public IDRespondido:number
-    public IDResposta: number
+    /**
+     * IDComentario é um extenção do IDComentario só que para resposta, 
+     * na verdade a resposta é apenas um comentário só que não armazena outras respostas dentro
+     */
+    public IDComentario: number
     public IDPostagem: number
     public respostaString:string
 
-    constructor(IDUsuario:number, IDResposta:number, IDPostagem:number, IDRespondido:number, respostaString:string){
+    constructor(IDUsuario:number, IDComentario:number, IDPostagem:number, IDRespondido:number, respostaString:string){
         this.IDRespondido = IDRespondido
         this.IDUsuario = IDUsuario;
-        this.IDResposta = IDResposta
+        this.IDComentario = IDComentario
         this.IDPostagem = IDPostagem
         this.respostaString = respostaString
     }
