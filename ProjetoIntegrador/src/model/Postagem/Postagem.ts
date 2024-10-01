@@ -60,4 +60,15 @@ export class Postagem{
         this.deslikes += 1
     }
 
+    removerComentario(idComentario:number):boolean{
+        let findComent = this.comentarios.find(comment => comment.IDComentario === idComentario)
+        let indexComent = findComent? this.comentarios.indexOf(findComent): false
+        if(indexComent){
+            this.comentarios.splice(indexComent,1)
+            this.idsRemovComent++
+            return true
+        }
+        return false
+    }
+
 }

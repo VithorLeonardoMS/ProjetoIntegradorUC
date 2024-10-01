@@ -10,11 +10,39 @@ export let listaCursoExterno:CursoExterno[]
 export let listaCursoInterno:CursoInterno[]
 export let listaPostagem:Postagem[]
 
-export let IDsRemovidos = new Map<string,number>
-
-IDsRemovidos.set('Usuarios',0)
+/**
+ * IDsRemovidos
+ * 
+ * Organiza todas as listas de IDsRemovidos para cadas classes
+ * tem a seguinte estrutura:
+ * Map<nome da classe, numero de ids da classe Já Removidos>
+ * @type {Map<string, number>}
+ * 
+ */
+export let IDsRemovidos: Map<string, number> = new Map<string, number>
+//Definindo as chaves
+IDsRemovidos.set('Usuario',0)
 IDsRemovidos.set('Aula',0)
 IDsRemovidos.set('CursoExterno',0)
 IDsRemovidos.set('CursoInterno',0)
 IDsRemovidos.set('Postagem',0)
-if(IDsRemovidos.get('Usuario'))
+
+export function addIDsRemovidos(classe:string, nEspecifico?:number){
+    let teste = IDsRemovidos.get(classe)
+    if(nEspecifico){
+        if(!teste){
+            throw new Error(`Erro em addIDsRemovidos(${classe})`);
+            
+        } else{
+            IDsRemovidos.set('Usuario', teste+ nEspecifico)
+        }
+    
+    } else if(!teste){
+        throw new Error(`Erro em addIDsRemovidos(${classe}, ${nEspecifico? nEspecifico : 'nullo'})`);
+        
+    } else{
+        IDsRemovidos.set('Usuario', teste++)
+    }
+
+}
+

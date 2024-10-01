@@ -32,10 +32,16 @@ export class Comentario {
     getComentRespostas():string{
         return this.respostas.reduce((acumulador,respostaAtual)=> {return acumulador += respostaAtual.getRespostaSimples()},'')
     }
-
-    responderThis(idUsRespondendo:number): void {//usuario externo respondendo o comentário atual
-        let resposta = leitor.question(`Digite o comentario: @${listaUsuarios.find(usAtual => usAtual.IDUsuario === idUsRespondendo)?.nome/*UsRespndo.nome */} `)
-        resposta = new Resposta(idUsRespondendo,this.definirIDResp(),this.IDPostagem,this.IDComentario,resposta)
+    //usuario externo respondendo o comentário atual
+    responderThis(idUsRespondendo:number, respString?:string): void {
+        let respostaString:string = ''
+        if(!respString){
+            respostaString = leitor.question(`Digite o comentario: @${listaUsuarios.find(usAtual => usAtual.IDUsuario === idUsRespondendo)?.nome/*UsRespndo.nome */} `)
+            
+        } else {
+            respostaString = respString
+        }
+        let resposta = new Resposta(idUsRespondendo,this.definirIDResp(),this.IDPostagem,this.IDComentario,respostaString)
         this.respostas.push(resposta)
     }
     /**
@@ -43,11 +49,16 @@ export class Comentario {
      * @param {number} idResposta  -> ID da resposta que será respondida
      * @param {number} idUsRespondendo:number  -> ID do usuario que está respondendo a resposta
      */
-    responderResposta(idResposta:number,idUsRespondendo:number):void{
+    responderResposta(idResposta:number,idUsRespondendo:number, comentString?:string):void{
+        let findComent = this.respostas.find(respAtual => respAtual.IDComentario == idResposta)
+        let resposta:string
+        if(!comentString){
+            resposta = leitor.question(`Digite o comentario: @${listaUsuarios.find(usAtual => usAtual.IDUsuario === findComent?.IDUsuario)?.nome} `)
 
-        let findComent = this.respostas.find(respAtual => respAtual.IDResposta == idResposta)
-        let reposta = leitor.question(`Digite o comentario: @${listaUsuarios.find(usAtual => usAtual.IDUsuario === findComent?.IDUsuario)?.nome} `)
-        this.respostas.push(new Resposta(idUsRespondendo,this.definirIDResp(), this.IDPostagem,this.IDComentario ,reposta))
+        } else{
+            resposta = comentString
+        }
+        this.respostas.push(new Resposta(idUsRespondendo,this.definirIDResp(), this.IDPostagem,this.IDComentario, resposta))
     }
 
     darLikeComent():void{
@@ -55,31 +66,14 @@ export class Comentario {
     }
 
     darDeslikeComent(usuarioPortador:Usuario):void{
-        let teste = usuarioPortador?.listaDeslikes.get('Comentario')?.find(idEncontrado => idEncontrado === this.IDComentario)
-        if(teste){
-            usuarioPortador
-
-        }
+        
     }
 
-    // respostaLike(IDUsuario:number, idResposta:number):boolean {
-    //     const respostaFd = this.respostas.find(respostaAtual=>respostaAtual.IDResposta === idResposta)
-    //     const usuarioFd = listaUsuarios.find(usuarioAtual => usuarioAtual.IDUsuario == IDUsuario)
-    //     if(usuarioFd?.verificarLike('Resposta',this.IDComentario,this.IDPostagem)){
-    //         respostaFd?.darLikeResp()
-    //         return true
-    //     } else{
-    //         return false
-    //     }//Problema, o usuario salva uma chave com o id da resposta e o id do comentário, mas aí não é possivel identificar de qual postagem é a resposta do comentário
-
-    //}
+    respostaLike(usuario:Usuario, idResposta:number):void {
+        usuario.
+    }
     respostaDeslike(): void {
-        let opc2 = leitor.question(`Qual comentario voce deseja não curtir (1|2)? `);
-        if(opc2 == this.respostas[opc2 - 1]) {
-            this.deslikes + 1
-        } else {
-            console.log('Opção inválida! ')
-        }
+
     }
 
     private definirIDResp():number{

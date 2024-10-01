@@ -11,9 +11,7 @@ import { IDsRemovidos } from "./Variaveis";
 
     function definirNovoID(lista:Comentario[] | Resposta[] | Usuario[] | Aula[] | CursoExterno[] | CursoInterno[] | Postagem[], idsRemovidos?:number):number{
 
-        if(lista instanceof Comentario && idsRemovidos){
-            return lista.length + idsRemovidos
-        } else if(lista[0] instanceof Resposta && idsRemovidos){
+        if((lista[0] instanceof Resposta || lista[0] instanceof Comentario) && idsRemovidos){
             return lista.length + idsRemovidos
         } else if(lista[0] instanceof Usuario){
             let retorno = IDsRemovidos.get('Usuarios')
@@ -31,6 +29,7 @@ import { IDsRemovidos } from "./Variaveis";
             let retorno = IDsRemovidos.get('Usuarios')
             return (retorno? retorno:0) + lista.length
         } else{
+            throw new Error(`Erro em definirNovoID(${lista}, ${idsRemovidos})`);
             return -1
         }
 

@@ -81,6 +81,7 @@ export class Usuario {
             //Se a chave não existir adiciona a chave
             if(!this.comentsLikes.has(IDChave)){{
                 this.comentsLikes.set(IDChave, [objeto.IDComentario])
+                return true
                 }
             //Se existir verifica-o
             } else {
@@ -89,6 +90,10 @@ export class Usuario {
                         //Se IDChave já exitir remove-o, assim retirando o like
                         if (value.indexOf(IDChave) > -1) {
                             value.splice(value.indexOf(IDChave), 1)
+                                                                        //TENTANDO REMOVER A CHAVE SE ESTIVER SEM IDS, ARRUMAR EM GERAL E NOS OUTROS IFS
+                                                                        if(value.length === 0){
+                                                                            this.comentsLikes.delete(key)
+                                                                        }
                             //Se não existir o adiciona
                         } else {
                             value.push(objeto.IDComentario)
@@ -103,6 +108,8 @@ export class Usuario {
                 if (key === 'CursoExterno') {
                     if (value.indexOf(objeto.IDPostagem) > -1) {
                         value.splice(value.indexOf(objeto.IDPostagem), 1)
+                        if(value.length === 0){
+                        }
                     } else {
                         value.push(objeto.IDPostagem)
                         return true
@@ -151,7 +158,7 @@ export class Usuario {
         }
     }
 
-    verificarLike(objeto: Comentario | CursoExterno | CursoInterno | Aula | Postagem | Resposta): boolean {
+    hasLike(objeto: Comentario | CursoExterno | CursoInterno | Aula | Postagem | Resposta): boolean {
         if (objeto instanceof Comentario || objeto instanceof Resposta) {
             //ID que deve ser a chave no map dos comentários
             let IDChave = objeto.IDPostagem
@@ -167,16 +174,87 @@ export class Usuario {
                     return false
             }
         } else if(objeto instanceof CursoExterno){
-            
+            this.postsLikes.forEach((value, key) => {
+                if (key === "CursoExterno" && value.find(idPostagem => idPostagem == objeto.IDPostagem)){
+                        return true
+                }
+            });
+            return false
         } else if(objeto instanceof CursoInterno){
-            
+            this.postsLikes.forEach((value, key) => {
+                if (key === "CursoInterno" && value.find(idPostagem => idPostagem == objeto.IDPostagem)){
+                        return true
+                }
+            });
+            return false
         } else if(objeto instanceof Aula){
-            
+            this.postsLikes.forEach((value, key) => {
+                if (key === "Aula" && value.find(idPostagem => idPostagem == objeto.IDPostagem)){
+                        return true
+                }
+            });
+            return false
         } else if(objeto instanceof Postagem){
+            this.postsLikes.forEach((value, key) => {
+                if (key === "Postagem" && value.find(idPostagem => idPostagem == objeto.IDPostagem)){
+                        return true
+                }
+            });
+            return false
+        } else {
+            throw new Error(`Erro em hasLike(${objeto})`);
             
         }
     }
 
+    hasDeslike(objeto: Comentario | CursoExterno | CursoInterno | Aula | Postagem | Resposta): boolean {
+        if (objeto instanceof Comentario || objeto instanceof Resposta) {
+            //ID que deve ser a chave no map dos comentários
+            let IDChave = objeto.IDPostagem
+            if(!this.comentsDeslikes.has(IDChave)){{
+                return false
+                }
+            } else {
+                this.comentsDeslikes.forEach((value, key) => {
+                        if (key === IDChave && value.find(idComentario => idComentario == objeto.IDComentario)) {
+                                return true
+                        }
+                    });
+                    return false
+            }
+        } else if(objeto instanceof CursoExterno){
+            this.postsDeslikes.forEach((value, key) => {
+                if (key === "CursoExterno" && value.find(idPostagem => idPostagem == objeto.IDPostagem)){
+                        return true
+                }
+            });
+            return false
+        } else if(objeto instanceof CursoInterno){
+            this.postsDeslikes.forEach((value, key) => {
+                if (key === "CursoInterno" && value.find(idPostagem => idPostagem == objeto.IDPostagem)){
+                        return true
+                }
+            });
+            return false
+        } else if(objeto instanceof Aula){
+            this.postsDeslikes.forEach((value, key) => {
+                if (key === "Aula" && value.find(idPostagem => idPostagem == objeto.IDPostagem)){
+                        return true
+                }
+            });
+            return false
+        } else if(objeto instanceof Postagem){
+            this.postsDeslikes.forEach((value, key) => {
+                if (key === "Postagem" && value.find(idPostagem => idPostagem == objeto.IDPostagem)){
+                        return true
+                }
+            });
+            return false
+        } else {
+            throw new Error(`Erro em hasLike(${objeto})`);
+            
+        }
+    }
 
 
 
