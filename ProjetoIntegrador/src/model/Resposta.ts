@@ -1,4 +1,5 @@
-import { listaUsuarios } from "../Utils/Variaveis";
+
+import { redeMain } from "../../Index";
 import { Comentario } from "./Comentario";
 
 let rl = require('readline-sync')
@@ -25,16 +26,24 @@ export class Resposta{
     }
     getRespostaSimples():string{
         return(`
-        ${listaUsuarios.find(usuarioAtual => usuarioAtual.IDUsuario == this.IDUsuario)?.nome,this.IDUsuario}
+        ${redeMain.listaUsuarios.find(usuarioAtual => usuarioAtual.getIDUsuario() == this.IDUsuario)?.getNome(),this.IDUsuario}
         @${this.IDRespondido} ${this.respostaString}
         Likes: ${this.likes}    Deslikes: ${this.deslikes}`)
     }
-    darLikeResp(){
+    addLikeComent():void{
         this.likes++
     }
 
-    darDeslikeResp(){
+    rmLikeComent():void{
+        this.likes--
+    }
+
+    addDeslikeComent():void{
         this.deslikes++
+    }
+
+    rmDeslikeComent():void{
+        this.deslikes--
     }
 
 }

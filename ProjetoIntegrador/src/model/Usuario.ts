@@ -1,3 +1,4 @@
+
 import { Comentario } from "./Comentario"
 import { Aula } from "./Postagem/Aula"
 import { CursoExterno } from "./Postagem/CursoExterno"
@@ -7,10 +8,13 @@ import { Resposta } from "./Resposta"
 
 
 export class Usuario {
-    public nome: string
-    public IDUsuario: number
-    public email: string
+    private nome: string
+    private IDUsuario: number
+    private email: string
     private senha: string
+    private fotoPerfil:string
+    private postsSalvos: (CursoExterno | CursoInterno | Aula | Postagem)[] = []
+    private postsCriados: (CursoExterno | CursoInterno | Aula | Postagem)[] = []
     /**
      * Postslikes
      * lista todos os likes dados pelo usuário, usando um map, que organiza as informações da seguinte forma:
@@ -32,6 +36,9 @@ export class Usuario {
     public comentsLikes: Map<number, number[]>
     public comentsDeslikes:Map<number, number[]>
 
+    private logado:boolean = false
+
+
     constructor(nome: string, IDUsuario: number, email: string, senha: string) {
         this.nome = nome
         this.IDUsuario = IDUsuario
@@ -45,42 +52,127 @@ export class Usuario {
         this.postsLikes.set('Resposta', [])
     }
 
-    alterarSenha(senhaNova: string, senhaVerifica: string): void {
+    logar(senhaTeste:string):boolean{
+        if(senhaTeste === this.senha){
+            this.logado = true
+            return true
+        }
+        return false
+    }
+
+    deslogar():boolean{
+        if(this.logado == true){
+            this.logado = false
+            return true
+        }
+        return false
+    }
+
+    getPerfil():string{
+        return`ID:             ${this.IDUsuario}\n`
+            + `Nome:           ${this.nome}\n`
+            + `E-Mail:         ${this.email}\n`
+            + `Foto De perfil: ${this.fotoPerfil}`
+    }
+
+    getNome():string{
+        return this.nome
+    }
+
+    getEmail():string{
+        return this.email
+    }
+
+    getIDUsuario():number{
+        return this.IDUsuario
+    }
+
+    getFotoPerfil():string{
+        return this.fotoPerfil
+    }
+
+    getSalvos():string[] | undefined{
+        if(!this.logado){
+            throw new Error(`Usuario não logado em getSalvos()`)
+        }
+        if(this.postsSalvos.length == 0){
+            return undefined
+        } else {
+            const retorno:string[] = []
+            this.postsCriados.forEach((postAtual)=>{
+                retorno.push(postAtual.getPostagem())
+            })
+            return retorno
+        }
+    }
+
+    getCriados():string[] | undefined{
+        if(!this.logado){
+            throw new Error(`Usuario não logado em getCriados()`)
+        }
+        if(this.postsSalvos.length == 0){
+            return undefined
+        } else {
+            const retorno:string[] = []
+            this.postsCriados.forEach((postAtual)=>{
+                retorno.push(postAtual.getPostagem())
+            })
+            return retorno
+        }
+    }
+
+    setSenha(senhaNova: string, senhaVerifica: string): void {
+        if(!this.logado){
+            throw new Error(`Usuario não logado em alterarSenha(${senhaNova})`)
+        }
         if (this.senha === senhaVerifica) {
             this.senha === senhaNova
         }
     }
 
-    alterarNome(novoNome: string, senhaVerifica: string): void {
+    setNome(novoNome: string, senhaVerifica: string): void {
+        if(!this.logado){
+            throw new Error(`Usuario não logado em alterarNome(${novoNome},${senhaVerifica})`)
+        }
         if (this.senha === senhaVerifica) {
             this.nome === novoNome
         }
     }
 
-    alterarEmail(novoEmail: string, senhaVerifica: string): void {
-        if (this.senha === senhaVerifica) {
-            this.email === novoEmail
+    setFotoPerfil(novaFoto:string){
+        if(!this.logado){
+            throw new Error(`Usuario não logado em addFotoPerfil(${novaFoto})`)
         }
+        this.fotoPerfil = novaFoto
     }
 
-    likeComent(comentario: Comentario): void {
-        comentario.darDeslikeComent(this)
-        this.processarLike(comentario)
+    addSalvos(post: Postagem | Aula | CursoExterno | CursoInterno):void{
+        if(!this.logado){
+            throw new Error(`Usuario não logado em addSalvos(${post})`)
+        }
+        
+        this.postsSalvos.push(post)
     }
+
     /**
      * processarLike() -> Adiciona todos os likes feitos pelo usuário no banco de dados, que é estruturado com Map,
      * isso possibilita identificar se o like já foi dado ou não no objeto especifico, além disso, se o like já foi dado ele o retira do banco.
+     * Esta função já atualiza automaticamente a quantidade nova de likes no objeto
      * @param {Comentario | CursoExterno | CursoInterno | Aula | Postagem | Resposta} objeto -> É
      * o objeto que receberá o like.
      * @returns {boolean} Se o like for dado retorna true, se for retirado retorna false.
      */
     processarLike(objeto: Comentario | CursoExterno | CursoInterno | Aula | Postagem | Resposta): boolean {
+        if(!this.logado){
+            throw new Error(`Usuario não logado em processarLike(${objeto})`)
+        }
         if (objeto instanceof Comentario || objeto instanceof Resposta) {
             //ID que será a chave no map dos comentários
             let IDChave = objeto.IDPostagem
             //Se a chave não existir adiciona a chave
             if(!this.comentsLikes.has(IDChave)){{
                 this.comentsLikes.set(IDChave, [objeto.IDComentario])
+                objeto.addLikeComent()
                 return true
                 }
             //Se existir verifica-o
@@ -90,18 +182,20 @@ export class Usuario {
                         //Se IDChave já exitir remove-o, assim retirando o like
                         if (value.indexOf(IDChave) > -1) {
                             value.splice(value.indexOf(IDChave), 1)
-                                                                        //TENTANDO REMOVER A CHAVE SE ESTIVER SEM IDS, ARRUMAR EM GERAL E NOS OUTROS IFS
-                                                                        if(value.length === 0){
-                                                                            this.comentsLikes.delete(key)
-                                                                        }
+                            //removendo a chave(idPostagem referência) se estiver sem ids
+                            if(value.length === 0){
+                                this.comentsLikes.delete(key)
+                            }
                             //Se não existir o adiciona
                         } else {
                             value.push(objeto.IDComentario)
+                            objeto.addLikeComent()
                             return true
                         }
                     }
                 });
             }
+            objeto.rmLikeComent()
             return false
         } else if (objeto instanceof CursoExterno) {
             this.postsLikes.forEach((value, key) => {
@@ -112,10 +206,12 @@ export class Usuario {
                         }
                     } else {
                         value.push(objeto.IDPostagem)
+                        objeto.addLike()
                         return true
                     }
                 }
             });
+            objeto.rmLike()
             return false
         } else if (objeto instanceof CursoInterno) {
             this.postsLikes.forEach((value, key) => {
@@ -124,10 +220,12 @@ export class Usuario {
                         value.splice(value.indexOf(objeto.IDPostagem), 1)
                     } else {
                         value.push(objeto.IDPostagem)
+                        objeto.addLike()
                         return true
                     }
                 }
             });
+            objeto.rmLike()
             return false
         } else if (objeto instanceof Aula) {
             this.postsLikes.forEach((value, key) => {
@@ -136,10 +234,12 @@ export class Usuario {
                         value.splice(value.indexOf(objeto.IDPostagem), 1)
                     } else {
                         value.push(objeto.IDPostagem)
+                        objeto.addLike()
                         return true
                     }
                 }
             });
+            objeto.rmLike()
             return false
         } else if (objeto instanceof Postagem) {
             this.postsLikes.forEach((value, key) => {
@@ -148,17 +248,134 @@ export class Usuario {
                         value.splice(value.indexOf(objeto.IDPostagem), 1)
                     } else {
                         value.push(objeto.IDPostagem)
+                        objeto.addLike()
                         return true
                     }
                 }
             });
+            objeto.rmLike()
             return false
         } else {
             throw new Error(`instanceof para argumento "classe" não encontrada em processarLike(${objeto})`)
         }
     }
 
+    /**
+     * processarDeslike() -> Adiciona todos os deslikes feitos pelo usuário no banco de dados, que é estruturado com Map,
+     * isso possibilita identificar se o deslike já foi dado ou não no objeto especifico, além disso, se o deslike já foi dado ele o retira do banco.
+     * Esta função já atualiza automaticamente a quantidade nova de deslikes no objeto.
+     * @param {Comentario | CursoExterno | CursoInterno | Aula | Postagem | Resposta} objeto -> É
+     * o objeto que receberá o deslike.
+     * @returns {boolean} Se o deslike for dado retorna true, se for retirado retorna false.
+     */
+    processarDesike(objeto: Comentario | CursoExterno | CursoInterno | Aula | Postagem | Resposta): boolean {
+        if(!this.logado){
+            throw new Error(`Usuario não logado em processarDesllike(${objeto})`)
+        }
+        if (objeto instanceof Comentario || objeto instanceof Resposta) {
+            //ID que será a chave no map dos comentários
+            let IDChave = objeto.IDPostagem
+            //Se a chave não existir adiciona a chave
+            if(!this.comentsDeslikes.has(IDChave)){{
+                this.comentsDeslikes.set(IDChave, [objeto.IDComentario])
+                objeto.addDeslikeComent()
+                return true
+                }
+            //Se existir verifica-o
+            } else {
+                this.comentsDeslikes.forEach((value, key) => {
+                    if (key === IDChave) {
+                        //Se IDChave já exitir remove-o, assim retirando o like
+                        if (value.indexOf(IDChave) > -1) {
+                            value.splice(value.indexOf(IDChave), 1)
+                            //removendo a chave(idPostagem referência) se estiver sem ids
+                            if(value.length === 0){
+                                this.comentsDeslikes.delete(key)
+                            }
+                            //Se não existir o adiciona
+                        } else {
+                            value.push(objeto.IDComentario)
+                            objeto.addDeslikeComent()
+                            return true
+                        }
+                    }
+                });
+            }
+            objeto.rmDeslikeComent()
+            return false
+        } else if (objeto instanceof CursoExterno) {
+            this.postsDeslikes.forEach((value, key) => {
+                if (key === 'CursoExterno') {
+                    if (value.indexOf(objeto.IDPostagem) > -1) {
+                        value.splice(value.indexOf(objeto.IDPostagem), 1)
+                        if(value.length === 0){
+                        }
+                    } else {
+                        value.push(objeto.IDPostagem)
+                        objeto.addDeslike()
+                        return true
+                    }
+                }
+            });
+            objeto.rmDeslike()
+            return false
+        } else if (objeto instanceof CursoInterno) {
+            this.postsDeslikes.forEach((value, key) => {
+                if (key === 'CursoInterno') {
+                    if (value.indexOf(objeto.IDPostagem) > -1) {
+                        value.splice(value.indexOf(objeto.IDPostagem), 1)
+                    } else {
+                        value.push(objeto.IDPostagem)
+                        objeto.addDeslike()
+                        return true
+                    }
+                }
+            });
+            objeto.rmDeslike()
+            return false
+        } else if (objeto instanceof Aula) {
+            this.postsDeslikes.forEach((value, key) => {
+                if (key === 'Aula') {
+                    if (value.indexOf(objeto.IDPostagem) > -1) {
+                        value.splice(value.indexOf(objeto.IDPostagem), 1)
+                    } else {
+                        value.push(objeto.IDPostagem)
+                        objeto.addDeslike()
+                        return true
+                    }
+                }
+            });
+            objeto.rmDeslike()
+            return false
+        } else if (objeto instanceof Postagem) {
+            this.postsDeslikes.forEach((value, key) => {
+                if (key === 'Postagem') {
+                    if (value.indexOf(objeto.IDPostagem) > -1) {
+                        value.splice(value.indexOf(objeto.IDPostagem), 1)
+                    } else {
+                        value.push(objeto.IDPostagem)
+                        objeto.addDeslike()
+                        return true
+                    }
+                }
+            });
+            objeto.rmDeslike()
+            return false
+        } else {
+            throw new Error(`instanceof para argumento "classe" não encontrada em processarLike(${objeto})`)
+        }
+    }
+
+    /**
+     * hasLike() -> Retorna se o objeto já recebeu like por este usuário
+     * 
+     * @param {Comentario | CursoExterno | CursoInterno | Aula | Postagem | Resposta} objeto 
+     * @returns {boolean}
+     */
     hasLike(objeto: Comentario | CursoExterno | CursoInterno | Aula | Postagem | Resposta): boolean {
+        if(!this.logado){
+            throw new Error(`Usuario não logado em hasLike(${objeto})`)
+        }
         if (objeto instanceof Comentario || objeto instanceof Resposta) {
             //ID que deve ser a chave no map dos comentários
             let IDChave = objeto.IDPostagem
@@ -207,7 +424,16 @@ export class Usuario {
         }
     }
 
+     /**
+     * hasDeslike() -> Retorna se o objeto já recebeu deslike por este usuário
+     * 
+     * @param {Comentario | CursoExterno | CursoInterno | Aula | Postagem | Resposta} objeto 
+     * @returns {boolean}
+     */
     hasDeslike(objeto: Comentario | CursoExterno | CursoInterno | Aula | Postagem | Resposta): boolean {
+        if(!this.logado){
+            throw new Error(`Usuario não logado em hasDeslike(${objeto})`)
+        }
         if (objeto instanceof Comentario || objeto instanceof Resposta) {
             //ID que deve ser a chave no map dos comentários
             let IDChave = objeto.IDPostagem
@@ -251,7 +477,7 @@ export class Usuario {
             });
             return false
         } else {
-            throw new Error(`Erro em hasLike(${objeto})`);
+            throw new Error(`Erro em hasDesike(${objeto})`);
             
         }
     }

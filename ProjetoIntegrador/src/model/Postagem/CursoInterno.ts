@@ -10,6 +10,14 @@ export class CursoInterno extends Postagem{
         super(IDPostagem,IDUsuario,nomeUsuario,titulo,descricao,data,anexos)
         this.cargaHoraria = cargaHoraria
     }
+    getPostagem():string{
+        return `IDpostagem:       ${this.IDPostagem} ${this.getUltimaAlteracao()}\n`
+             + `Carga Horaria     ${this.cargaHoraria}\n`
+             + `Titulo:           ${this.titulo}\n`
+             + `Descricao:        ${this.descricao}\n`
+             + `Anexos            ${this.anexos}\n`
+             + `Likes:            ${this.likes}  Deslikes: ${this.deslikes}`
+    }
 
     novaAula(aula:Aula):void{
         this.aulas.push(aula)

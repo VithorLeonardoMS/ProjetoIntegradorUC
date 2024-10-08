@@ -13,6 +13,15 @@ export class CursoExterno extends Postagem{
         this.cargaHoraria = cargaHoraria
     }
 
+    getPostagem():string{
+        return `ID da postagem:   ${this.IDPostagem} ${this.getUltimaAlteracao()}\n`
+             + `Carga Horaria     ${this.cargaHoraria}\n`
+             + `Titulo:           ${this.titulo}\n`
+             + `Descricao:        ${this.descricao}\n`
+             + `Fontes:           ${this.fontes}\n`
+             + `Anexos            ${this.anexos}\n`
+             + `Likes:            ${this.likes}  Deslikes: ${this.deslikes}`
+    }
 
     alterarCargaHoraria(novaCargaHoraria:number){
         this.cargaHoraria = novaCargaHoraria

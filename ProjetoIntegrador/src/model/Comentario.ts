@@ -1,4 +1,4 @@
-import { listaUsuarios } from "../Utils/Variaveis"
+import { redeMain } from "../../Index"
 import { Postagem } from "./Postagem/Postagem"
 import { Resposta } from "./Resposta"
 import { Usuario } from "./Usuario"
@@ -36,7 +36,7 @@ export class Comentario {
     responderThis(idUsRespondendo:number, respString?:string): void {
         let respostaString:string = ''
         if(!respString){
-            respostaString = leitor.question(`Digite o comentario: @${listaUsuarios.find(usAtual => usAtual.IDUsuario === idUsRespondendo)?.nome/*UsRespndo.nome */} `)
+            respostaString = leitor.question(`Digite o comentario: @${redeMain.listaUsuarios.find(usAtual => usAtual.getIDUsuario() === idUsRespondendo)?.getNome()/*UsRespndo.nome */} `)
             
         } else {
             respostaString = respString
@@ -53,7 +53,7 @@ export class Comentario {
         let findComent = this.respostas.find(respAtual => respAtual.IDComentario == idResposta)
         let resposta:string
         if(!comentString){
-            resposta = leitor.question(`Digite o comentario: @${listaUsuarios.find(usAtual => usAtual.IDUsuario === findComent?.IDUsuario)?.nome} `)
+            resposta = leitor.question(`Digite o comentario: @${redeMain.listaUsuarios.find(usAtual => usAtual.getIDUsuario() === findComent?.IDUsuario)?.getNome()} `)
 
         } else{
             resposta = comentString
@@ -61,17 +61,26 @@ export class Comentario {
         this.respostas.push(new Resposta(idUsRespondendo,this.definirIDResp(), this.IDPostagem,this.IDComentario, resposta))
     }
 
-    darLikeComent():void{
+    addLikeComent():void{
         this.likes++
     }
 
-    darDeslikeComent(usuarioPortador:Usuario):void{
-        
+    rmLikeComent():void{
+        this.likes--
+    }
+
+    addDeslikeComent():void{
+        this.deslikes++
+    }
+
+    rmDeslikeComent():void{
+        this.deslikes--
     }
 
     respostaLike(usuario:Usuario, idResposta:number):void {
-        usuario.
+        usuario//
     }
+
     respostaDeslike(): void {
 
     }
@@ -80,5 +89,6 @@ export class Comentario {
         return this.respostas.length + this.idsRemovResp
     }
 
+    
 }
 

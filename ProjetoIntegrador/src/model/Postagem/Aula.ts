@@ -10,6 +10,16 @@ export class Aula extends Postagem{
         super(IDPostagem,IDUsuario,nomeUsuario,titulo,descricao,data,anexos)
     }
 
+    getPostagem():string{
+        return `ID da Aula:       ${this.IDPostagem} ${this.getUltimaAlteracao()}\n`
+             + `Carga Horaria     ${this.cargaHoraria}\n`
+             + `ID do Curso:      ${this.IDPostagemReferencia}`
+             + `Titulo:           ${this.titulo}\n`
+             + `Descricao:        ${this.descricao}\n`
+             + `Anexos            ${this.anexos}\n`
+             + `Likes:            ${this.likes}  Deslikes: ${this.deslikes}`
+    }
+
     alterarCargaHoraria(novaCargaHoraria:number){
         this.cargaHoraria = novaCargaHoraria
     }
