@@ -4,7 +4,7 @@ import { Resposta } from "../Resposta"
 import { Usuario } from "../Usuario"
 
 let date = new Date()
-let dataAtual = `${date.getFullYear()}-${date.getDate()}-${date.getMonth() + 1}`
+
 
 export class Postagem {
     public IDPostagem: number
@@ -16,44 +16,75 @@ export class Postagem {
     public anexos: string[]
     public deslikes: number
     public likes: number
+    private cargaHoraria:number | undefined
 
-    constructor(IDPostagem: number, titulo: string, descricao: string, data: string, anexos: string[]) {
+    constructor(IDPostagem: number, titulo: string, descricao: string, anexos: string[]) {
+        let dataAtual = `${date.getFullYear()}-${date.getDate()}-${date.getMonth() + 1}`
         this.IDPostagem = IDPostagem
         this.titulo = titulo
         this.descricao = descricao
-        this.datas.push(data)
-        this.datas.push(data)//Esta correto
+        this.datas.push(dataAtual)
+        this.datas.push(dataAtual)//Esta Correto
         this.anexos = anexos
 
     }
 
-    getPostagem():string{
-        return `IDpostagem:       ${this.IDPostagem} ${this.getUltimaAlteracao()}\n`
-             + `Titulo:           ${this.titulo}\n`
-             + `Descricao:        ${this.descricao}\n`
-             + `Anexos:           ${this.anexos}`
-             + `Likes:            ${this.likes}  Deslikes: ${this.deslikes}`
-    }
+    getPostagem(usuario:Usuario):string | object{
+        if(usuario.getListagemTipo() == "Linhas"){
+            return `ID:       ${this.IDPostagem} ${this.getUltimaAlteracao()}\n`
+                + `Titulo:           ${this.titulo}\n`
+                + `Descricao:        ${this.descricao}\n`
+                + `Anexos:           ${this.anexos}`
+                + `Likes:            ${this.likes}  Deslikes: ${this.deslikes}`
+        } else if(usuario.getListagemTipo() == "Tabelas"){
+            return {
+                ID: this.IDPostagem,
+                Data: this.datas[0],
+                CargaHoraria: this.cargaHorariaTable(),
+                Titulo: this.titulo,
+                Descricao: this.descricao,
+                Likes: this.likes,
+                Deslikes: this.deslikes
+                }
+        } else{
+            throw new Error(`Erro em getPostagem(${usuario})`)
+        }
 
+    }
     getUltimaAlteracao():string{
         return this.datas[this.datas.length - 1]? this.datas[this.datas.length - 1]: "Data nao encontrada. "
+    }
+
+    private cargaHorariaTable():string{
+        if(this.cargaHoraria != 0){
+            return `${this.cargaHoraria}`
+        } else{
+           return 'Nullo' 
+        }
     }
 
     dataCriacao(): string {
         return this.dataCriacao[0]
     }
 
+    setCargaHoraria(usuario:Usuario){
+        if(usuario.)
+    }
+
     alterarTitulo(novoTitulo: string):void {
+        let dataAtual = `${date.getFullYear()}-${date.getDate()}-${date.getMonth() + 1}`
         this.titulo = novoTitulo
         this.datas.push(dataAtual)
     }
 
     alterarDescricao(novaDescricao: string):void {
+        let dataAtual = `${date.getFullYear()}-${date.getDate()}-${date.getMonth() + 1}`
         this.descricao = novaDescricao
         this.datas.push(dataAtual)
     }
 
     alterarAnexos(novosAnexos: string[]):void {
+        let dataAtual = `${date.getFullYear()}-${date.getDate()}-${date.getMonth() + 1}`
         this.anexos = novosAnexos
         this.datas.push(dataAtual)
     }

@@ -15,6 +15,7 @@ export class Usuario {
     private fotoPerfil:string
     private postsSalvos: (CursoExterno | CursoInterno | Aula | Postagem)[] = []
     private postsCriados: (CursoExterno | CursoInterno | Aula | Postagem)[] = []
+    private listagemTipo: string = "Linhas"
     /**
      * Postslikes
      * lista todos os likes dados pelo usuário, usando um map, que organiza as informações da seguinte forma:
@@ -68,11 +69,27 @@ export class Usuario {
         return false
     }
 
-    getPerfil():string{
+    getPerfilLinhas():string{
         return`ID:             ${this.IDUsuario}\n`
             + `Nome:           ${this.nome}\n`
             + `E-Mail:         ${this.email}\n`
             + `Foto De perfil: ${this.fotoPerfil}`
+    }
+
+    getPerfilObjeto():object{
+        return{
+            ID: this.IDUsuario,
+            Nome: this.nome,
+            EMail: this.email,
+        }
+    }
+
+    getLogado():boolean{
+        return this.logado
+    }
+
+    getListagemTipo():string{
+        return this.listagemTipo
     }
 
     getNome():string{
@@ -146,6 +163,14 @@ export class Usuario {
         this.fotoPerfil = novaFoto
     }
 
+    setListagemTipo(tipo:string):boolean{
+        if(tipo == "Linhas" || tipo == "Tabelas"){
+            this.listagemTipo = tipo
+            return true
+        }
+        return false
+    }
+
     addSalvos(post: Postagem | Aula | CursoExterno | CursoInterno):void{
         if(!this.logado){
             throw new Error(`Usuario não logado em addSalvos(${post})`)
@@ -170,23 +195,23 @@ export class Usuario {
             //ID que será a chave no map dos comentários
             let IDChave = objeto.IDPostagem
             //Se a chave não existir adiciona a chave
-            if(!this.comentsLikes.has(IDChave)){{
+            if(!this.comentsLikes.has(IDChave)){
                 this.comentsLikes.set(IDChave, [objeto.IDComentario])
                 objeto.addLikeComent()
                 return true
-                }
-            //Se existir verifica-o
+                
+            //Se existir
             } else {
                 this.comentsLikes.forEach((value, key) => {
                     if (key === IDChave) {
-                        //Se IDChave já exitir remove-o, assim retirando o like
+                        //Se objeto.IDComentario em IDChave já exitir remove-o, assim retirando o like
                         if (value.indexOf(IDChave) > -1) {
                             value.splice(value.indexOf(IDChave), 1)
                             //removendo a chave(idPostagem referência) se estiver sem ids
                             if(value.length === 0){
                                 this.comentsLikes.delete(key)
                             }
-                            //Se não existir o adiciona
+                            //Se objeto.IDComentario em IDChave não existir o adiciona
                         } else {
                             value.push(objeto.IDComentario)
                             objeto.addLikeComent()
