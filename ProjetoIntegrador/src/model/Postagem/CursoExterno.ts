@@ -1,45 +1,53 @@
+import { RedeMain } from "../../Controlers/RedeMain";
 import { Usuario } from "../Usuario";
 import { Postagem } from "./Postagem";
 
 
 
 export class CursoExterno extends Postagem{
-    public cargaHoraria:number
-    public fontes:string[]
+    private fontes:string[]
     
 
-    constructor(IDPostagem:number, IDUsuario:number, nomeUsuario:string, titulo:string, descricao:string, data:string, anexos:string[], cargaHoraria:number, fontes:string[]){
-        super(IDPostagem,IDUsuario,nomeUsuario,titulo,descricao,data,anexos)
+    constructor(redeMain:RedeMain, IDPostagem:number, IDUsuario:number, nomeUsuario:string, titulo:string, descricao:string, data:string, anexos:string[], fontes:string[],cargaHoraria?:number){
+        super(redeMain, IDPostagem,IDUsuario,titulo,descricao,anexos,cargaHoraria)
         this.fontes = fontes
-        this.cargaHoraria = cargaHoraria
     }
 
     getPostagem(usuario: Usuario):string | object{
         if(usuario.getListagemTipo() == "Linhas"){
-        return `ID da postagem:   ${this.IDPostagem} ${this.getUltimaAlteracao()}\n`
-             + `Carga Horaria     ${this.cargaHoraria}\n`
-             + `Titulo:           ${this.titulo}\n`
-             + `Descricao:        ${this.descricao}\n`
+        return `ID da postagem:   ${this.getIDPostagem()} ${this.getDataCriacao()}\n`
+             + `Carga Horaria     ${this.getCargaHoraria()}\n`
+             + `Titulo:           ${this.getTitulo()}\n`
+             + `Descricao:        ${this.getDescricao()}\n`
              + `Fontes:           ${this.fontes}\n`
-             + `Anexos            ${this.anexos}\n`
-             + `Likes:            ${this.likes}  Deslikes: ${this.deslikes}`
+             + `Anexos            ${this.getAnexos()}\n`
+             + `Likes:            ${this.getLikes()}  Deslikes: ${this.getDeslikes()}`
         }else if(usuario.getListagemTipo() == "Tabelas"){
             return {
-                ID: this.IDPostagem,
-                Data: this.datas[0],
-                CargaHoraria: this.cargaHoraria,
-                Titulo: this.titulo,
-                Descricao: this.descricao,
-                Likes: this.likes,
-                Deslikes: this.deslikes
+                ID: this.getIDPostagem(),
+                Data: this.getDataCriacao(),
+                CargaHoraria: this.getCargaHoraria(),
+                Titulo: this.getTitulo(),
+                Descricao: this.getDescricao(),
+                Likes: this.getLikes(),
+                Deslikes: this.getDeslikes()
                 }
         }else{
             throw new Error(`Erro em getPostagem(${usuario})`)
         }
     }
 
+    getFontes():string[]{
+        return this.fontes
+    }
+
     alterarCargaHoraria(novaCargaHoraria:number){
-        this.cargaHoraria = novaCargaHoraria
+        const findUS = this.redeMain.getUsuario(this.getIDUsuario());
+        if(findUS){
+            this.setCargaHoraria(findUS,novaCargaHoraria);
+        } else{
+            throw new Error(`Erro em CurosExterno.alterarCargaHoraria(${novaCargaHoraria})`);
+        }
     }
 
     alterarFontes(novasFontes:string[]){

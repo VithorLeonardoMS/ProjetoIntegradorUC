@@ -25,7 +25,7 @@ export function menuPerfil(redeMain:RedeMain, usuarioLogado:Usuario): void {
 		switch (opcao) {
 		case '0': break;
 		case '1': menuEditPerfil(redeMain,usuarioLogado); break;
-		case '2': console.info(usuarioLogado.getPerfil()); break;
+		case '2': console.info(usuarioLogado.getPerfil(usuarioLogado)); break;
 		case '3': 
             
             break;

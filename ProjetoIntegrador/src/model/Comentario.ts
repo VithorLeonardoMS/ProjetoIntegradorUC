@@ -3,17 +3,17 @@ import { Postagem } from "./Postagem/Postagem"
 import { Resposta } from "./Resposta"
 import { Usuario } from "./Usuario"
 
-var leitor = require('readline-sync')
+var rl = require('readline-sync')
 
 export class Comentario {
-    public likes: number = 0
-    public deslikes: number = 0
-    public IDUsuario: number
-    public IDComentario: number
-    public IDPostagem: number
-    public comentarioString:string
-    public respostas: Resposta[] = []
-    public idsRemovResp:number = 0
+    private likes: number = 0
+    private deslikes: number = 0
+    private IDUsuario: number
+    private IDComentario: number
+    private IDPostagem: number
+    private comentarioString:string
+    private respostas: Resposta[] = []
+    private idsRemovResp:number = 0
    
     constructor(IDUsuario, IDComentario: number, IDPostagem: number, comentarioString:string) {
         this.comentarioString = comentarioString
@@ -21,6 +21,22 @@ export class Comentario {
         this.IDComentario = IDComentario
         this.IDPostagem = IDPostagem
     }
+
+    getLikes():number{return this.likes}
+
+    getDeslikes():number{return this.deslikes}
+
+    getIDUsuario():number{return this.IDUsuario}
+
+    getIDComentario():number{return this.IDComentario}
+
+    getIDPostagem():number{return this.IDPostagem}
+
+    getComentarioString():string{return this.comentarioString}
+
+    getRespostas():Resposta[]{return this.respostas}
+
+    protected getIdsRemovResp():number{return this.idsRemovResp}
 
     getComentarioSimples():string{
         return(`
@@ -36,7 +52,7 @@ export class Comentario {
     responderThis(idUsRespondendo:number, respString?:string): void {
         let respostaString:string = ''
         if(!respString){
-            respostaString = leitor.question(`Digite o comentario: @${redeMain.listaUsuarios.find(usAtual => usAtual.getIDUsuario() === idUsRespondendo)?.getNome()/*UsRespndo.nome */} `)
+            respostaString = rl.question(`Digite o comentario: @${redeMain.getListaUsuarios().find(usAtual => usAtual.getIDUsuario() === idUsRespondendo)?.getNome()/*UsRespndo.nome */} `)
             
         } else {
             respostaString = respString
@@ -50,13 +66,12 @@ export class Comentario {
      * @param {number} idUsRespondendo:number  -> ID do usuario que está respondendo a resposta
      */
     responderResposta(idResposta:number,idUsRespondendo:number, comentString?:string):void{
-        let findComent = this.respostas.find(respAtual => respAtual.IDComentario == idResposta)
+        let findComent = this.respostas.find(respAtual => respAtual.getIDComentario() == idResposta)
         let resposta:string
-        if(!comentString){
-            resposta = leitor.question(`Digite o comentario: @${redeMain.listaUsuarios.find(usAtual => usAtual.getIDUsuario() === findComent?.IDUsuario)?.getNome()} `)
-
-        } else{
+        if(comentString){
             resposta = comentString
+        } else{
+            resposta = rl.question(`Digite o comentario: @${redeMain.getListaUsuarios().find(usAtual => usAtual.getIDUsuario() === findComent?.getIDUsuario())?.getNome()} `)
         }
         this.respostas.push(new Resposta(idUsRespondendo,this.definirIDResp(), this.IDPostagem,this.IDComentario, resposta))
     }

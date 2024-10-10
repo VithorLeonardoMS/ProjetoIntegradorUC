@@ -15,6 +15,9 @@ export class Usuario {
     private fotoPerfil:string
     private postsSalvos: (CursoExterno | CursoInterno | Aula | Postagem)[] = []
     private postsCriados: (CursoExterno | CursoInterno | Aula | Postagem)[] = []
+    /**
+     * listagemTipo = "linhas" ou "Tabelas"
+     */
     private listagemTipo: string = "Linhas"
     /**
      * Postslikes
@@ -69,6 +72,17 @@ export class Usuario {
         return false
     }
 
+    getPerfil(usuario:Usuario):string | object{
+        if(this.logado && this.listagemTipo == "Linhas"){
+            return this.getPerfilLinhas()
+        } else if(this.logado && this.listagemTipo == "Tabelas"){
+            return this.getPerfilObjeto()
+        } else{
+            return "Usuario não logado"
+        }
+
+    }
+
     getPerfilLinhas():string{
         return`ID:             ${this.IDUsuario}\n`
             + `Nome:           ${this.nome}\n`
@@ -108,31 +122,31 @@ export class Usuario {
         return this.fotoPerfil
     }
 
-    getSalvos():string[] | undefined{
+    getSalvos():(string | object)[] |undefined{
         if(!this.logado){
             throw new Error(`Usuario não logado em getSalvos()`)
         }
         if(this.postsSalvos.length == 0){
             return undefined
         } else {
-            const retorno:string[] = []
-            this.postsCriados.forEach((postAtual)=>{
-                retorno.push(postAtual.getPostagem())
+            const retorno:(string|object)[]= []
+            this.postsSalvos.forEach((postAtual)=>{
+                retorno.push(postAtual.getPostagem(this))
             })
             return retorno
         }
     }
 
-    getCriados():string[] | undefined{
+    getCriados():(string | object)[] | undefined{
         if(!this.logado){
             throw new Error(`Usuario não logado em getCriados()`)
         }
         if(this.postsSalvos.length == 0){
             return undefined
         } else {
-            const retorno:string[] = []
+            const retorno:(string | object)[] = []
             this.postsCriados.forEach((postAtual)=>{
-                retorno.push(postAtual.getPostagem())
+                retorno.push(postAtual.getPostagem(this))
             })
             return retorno
         }
@@ -193,10 +207,10 @@ export class Usuario {
         }
         if (objeto instanceof Comentario || objeto instanceof Resposta) {
             //ID que será a chave no map dos comentários
-            let IDChave = objeto.IDPostagem
+            let IDChave = objeto.getIDPostagem()
             //Se a chave não existir adiciona a chave
             if(!this.comentsLikes.has(IDChave)){
-                this.comentsLikes.set(IDChave, [objeto.IDComentario])
+                this.comentsLikes.set(IDChave, [objeto.getIDComentario()])
                 objeto.addLikeComent()
                 return true
                 
@@ -213,7 +227,7 @@ export class Usuario {
                             }
                             //Se objeto.IDComentario em IDChave não existir o adiciona
                         } else {
-                            value.push(objeto.IDComentario)
+                            value.push(objeto.getIDComentario())
                             objeto.addLikeComent()
                             return true
                         }
@@ -225,12 +239,12 @@ export class Usuario {
         } else if (objeto instanceof CursoExterno) {
             this.postsLikes.forEach((value, key) => {
                 if (key === 'CursoExterno') {
-                    if (value.indexOf(objeto.IDPostagem) > -1) {
-                        value.splice(value.indexOf(objeto.IDPostagem), 1)
+                    if (value.indexOf(objeto.getIDPostagem()) > -1) {
+                        value.splice(value.indexOf(objeto.getIDPostagem()), 1)
                         if(value.length === 0){
                         }
                     } else {
-                        value.push(objeto.IDPostagem)
+                        value.push(objeto.getIDPostagem())
                         objeto.addLike()
                         return true
                     }
@@ -241,10 +255,10 @@ export class Usuario {
         } else if (objeto instanceof CursoInterno) {
             this.postsLikes.forEach((value, key) => {
                 if (key === 'CursoInterno') {
-                    if (value.indexOf(objeto.IDPostagem) > -1) {
-                        value.splice(value.indexOf(objeto.IDPostagem), 1)
+                    if (value.indexOf(objeto.getIDPostagem()) > -1) {
+                        value.splice(value.indexOf(objeto.getIDPostagem()), 1)
                     } else {
-                        value.push(objeto.IDPostagem)
+                        value.push(objeto.getIDPostagem())
                         objeto.addLike()
                         return true
                     }
@@ -255,10 +269,10 @@ export class Usuario {
         } else if (objeto instanceof Aula) {
             this.postsLikes.forEach((value, key) => {
                 if (key === 'Aula') {
-                    if (value.indexOf(objeto.IDPostagem) > -1) {
-                        value.splice(value.indexOf(objeto.IDPostagem), 1)
+                    if (value.indexOf(objeto.getIDPostagem()) > -1) {
+                        value.splice(value.indexOf(objeto.getIDPostagem()), 1)
                     } else {
-                        value.push(objeto.IDPostagem)
+                        value.push(objeto.getIDPostagem())
                         objeto.addLike()
                         return true
                     }
@@ -269,10 +283,10 @@ export class Usuario {
         } else if (objeto instanceof Postagem) {
             this.postsLikes.forEach((value, key) => {
                 if (key === 'Postagem') {
-                    if (value.indexOf(objeto.IDPostagem) > -1) {
-                        value.splice(value.indexOf(objeto.IDPostagem), 1)
+                    if (value.indexOf(objeto.getIDPostagem()) > -1) {
+                        value.splice(value.indexOf(objeto.getIDPostagem()), 1)
                     } else {
-                        value.push(objeto.IDPostagem)
+                        value.push(objeto.getIDPostagem())
                         objeto.addLike()
                         return true
                     }
@@ -299,10 +313,10 @@ export class Usuario {
         }
         if (objeto instanceof Comentario || objeto instanceof Resposta) {
             //ID que será a chave no map dos comentários
-            let IDChave = objeto.IDPostagem
+            let IDChave = objeto.getIDPostagem()
             //Se a chave não existir adiciona a chave
             if(!this.comentsDeslikes.has(IDChave)){{
-                this.comentsDeslikes.set(IDChave, [objeto.IDComentario])
+                this.comentsDeslikes.set(IDChave, [objeto.getIDComentario()])
                 objeto.addDeslikeComent()
                 return true
                 }
@@ -319,7 +333,7 @@ export class Usuario {
                             }
                             //Se não existir o adiciona
                         } else {
-                            value.push(objeto.IDComentario)
+                            value.push(objeto.getIDComentario())
                             objeto.addDeslikeComent()
                             return true
                         }
@@ -331,12 +345,12 @@ export class Usuario {
         } else if (objeto instanceof CursoExterno) {
             this.postsDeslikes.forEach((value, key) => {
                 if (key === 'CursoExterno') {
-                    if (value.indexOf(objeto.IDPostagem) > -1) {
-                        value.splice(value.indexOf(objeto.IDPostagem), 1)
+                    if (value.indexOf(objeto.getIDPostagem()) > -1) {
+                        value.splice(value.indexOf(objeto.getIDPostagem()), 1)
                         if(value.length === 0){
                         }
                     } else {
-                        value.push(objeto.IDPostagem)
+                        value.push(objeto.getIDPostagem())
                         objeto.addDeslike()
                         return true
                     }
@@ -347,10 +361,10 @@ export class Usuario {
         } else if (objeto instanceof CursoInterno) {
             this.postsDeslikes.forEach((value, key) => {
                 if (key === 'CursoInterno') {
-                    if (value.indexOf(objeto.IDPostagem) > -1) {
-                        value.splice(value.indexOf(objeto.IDPostagem), 1)
+                    if (value.indexOf(objeto.getIDPostagem()) > -1) {
+                        value.splice(value.indexOf(objeto.getIDPostagem()), 1)
                     } else {
-                        value.push(objeto.IDPostagem)
+                        value.push(objeto.getIDPostagem())
                         objeto.addDeslike()
                         return true
                     }
@@ -361,10 +375,10 @@ export class Usuario {
         } else if (objeto instanceof Aula) {
             this.postsDeslikes.forEach((value, key) => {
                 if (key === 'Aula') {
-                    if (value.indexOf(objeto.IDPostagem) > -1) {
-                        value.splice(value.indexOf(objeto.IDPostagem), 1)
+                    if (value.indexOf(objeto.getIDPostagem()) > -1) {
+                        value.splice(value.indexOf(objeto.getIDPostagem()), 1)
                     } else {
-                        value.push(objeto.IDPostagem)
+                        value.push(objeto.getIDPostagem())
                         objeto.addDeslike()
                         return true
                     }
@@ -375,10 +389,10 @@ export class Usuario {
         } else if (objeto instanceof Postagem) {
             this.postsDeslikes.forEach((value, key) => {
                 if (key === 'Postagem') {
-                    if (value.indexOf(objeto.IDPostagem) > -1) {
-                        value.splice(value.indexOf(objeto.IDPostagem), 1)
+                    if (value.indexOf(objeto.getIDPostagem()) > -1) {
+                        value.splice(value.indexOf(objeto.getIDPostagem()), 1)
                     } else {
-                        value.push(objeto.IDPostagem)
+                        value.push(objeto.getIDPostagem())
                         objeto.addDeslike()
                         return true
                     }
@@ -403,13 +417,13 @@ export class Usuario {
         }
         if (objeto instanceof Comentario || objeto instanceof Resposta) {
             //ID que deve ser a chave no map dos comentários
-            let IDChave = objeto.IDPostagem
+            let IDChave = objeto.getIDPostagem()
             if(!this.comentsLikes.has(IDChave)){{
                 return false
                 }
             } else {
                 this.comentsLikes.forEach((value, key) => {
-                        if (key === IDChave && value.find(idComentario => idComentario == objeto.IDComentario)) {
+                        if (key === IDChave && value.find(idComentario => idComentario == objeto.getIDComentario())) {
                                 return true
                         }
                     });
@@ -417,28 +431,28 @@ export class Usuario {
             }
         } else if(objeto instanceof CursoExterno){
             this.postsLikes.forEach((value, key) => {
-                if (key === "CursoExterno" && value.find(idPostagem => idPostagem == objeto.IDPostagem)){
+                if (key === "CursoExterno" && value.find(idPostagem => idPostagem == objeto.getIDPostagem())){
                         return true
                 }
             });
             return false
         } else if(objeto instanceof CursoInterno){
             this.postsLikes.forEach((value, key) => {
-                if (key === "CursoInterno" && value.find(idPostagem => idPostagem == objeto.IDPostagem)){
+                if (key === "CursoInterno" && value.find(idPostagem => idPostagem == objeto.getIDPostagem())){
                         return true
                 }
             });
             return false
         } else if(objeto instanceof Aula){
             this.postsLikes.forEach((value, key) => {
-                if (key === "Aula" && value.find(idPostagem => idPostagem == objeto.IDPostagem)){
+                if (key === "Aula" && value.find(idPostagem => idPostagem == objeto.getIDPostagem())){
                         return true
                 }
             });
             return false
         } else if(objeto instanceof Postagem){
             this.postsLikes.forEach((value, key) => {
-                if (key === "Postagem" && value.find(idPostagem => idPostagem == objeto.IDPostagem)){
+                if (key === "Postagem" && value.find(idPostagem => idPostagem == objeto.getIDPostagem())){
                         return true
                 }
             });
@@ -461,13 +475,13 @@ export class Usuario {
         }
         if (objeto instanceof Comentario || objeto instanceof Resposta) {
             //ID que deve ser a chave no map dos comentários
-            let IDChave = objeto.IDPostagem
+            let IDChave = objeto.getIDPostagem()
             if(!this.comentsDeslikes.has(IDChave)){{
                 return false
                 }
             } else {
                 this.comentsDeslikes.forEach((value, key) => {
-                        if (key === IDChave && value.find(idComentario => idComentario == objeto.IDComentario)) {
+                        if (key === IDChave && value.find(idComentario => idComentario == objeto.getIDComentario())) {
                                 return true
                         }
                     });
@@ -475,28 +489,28 @@ export class Usuario {
             }
         } else if(objeto instanceof CursoExterno){
             this.postsDeslikes.forEach((value, key) => {
-                if (key === "CursoExterno" && value.find(idPostagem => idPostagem == objeto.IDPostagem)){
+                if (key === "CursoExterno" && value.find(idPostagem => idPostagem == objeto.getIDPostagem())){
                         return true
                 }
             });
             return false
         } else if(objeto instanceof CursoInterno){
             this.postsDeslikes.forEach((value, key) => {
-                if (key === "CursoInterno" && value.find(idPostagem => idPostagem == objeto.IDPostagem)){
+                if (key === "CursoInterno" && value.find(idPostagem => idPostagem == objeto.getIDPostagem())){
                         return true
                 }
             });
             return false
         } else if(objeto instanceof Aula){
             this.postsDeslikes.forEach((value, key) => {
-                if (key === "Aula" && value.find(idPostagem => idPostagem == objeto.IDPostagem)){
+                if (key === "Aula" && value.find(idPostagem => idPostagem == objeto.getIDPostagem())){
                         return true
                 }
             });
             return false
         } else if(objeto instanceof Postagem){
             this.postsDeslikes.forEach((value, key) => {
-                if (key === "Postagem" && value.find(idPostagem => idPostagem == objeto.IDPostagem)){
+                if (key === "Postagem" && value.find(idPostagem => idPostagem == objeto.getIDPostagem())){
                         return true
                 }
             });
