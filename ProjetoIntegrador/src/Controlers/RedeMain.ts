@@ -11,11 +11,11 @@ const rl = require("readline-sync")
 
 export class RedeMain{
 
-    listaUsuarios:Usuario[]
-    listaAula:Aula[]
-    listaCursoExterno:CursoExterno[]
-    listaCursoInterno:CursoInterno[]
-    listaPostagem:Postagem[]
+    private listaUsuario:Usuario[]
+    private listaAula:Aula[]
+    private listaCursoExterno:CursoExterno[]
+    private listaCursoInterno:CursoInterno[]
+    private listaPostagem:Postagem[]
 
     /**
      * IDsRemovidos
@@ -36,11 +36,26 @@ export class RedeMain{
         this.IDsRemovidos.set('Postagem',0)
     }
 
-    private static listaVazia():void{
+
+    getListaUsuarios():Usuario[]{return this.listaUsuario}
+
+    getListaAulas():Aula[]{return this.listaAula}
+
+    getListaCursoExternos():CursoExterno[]{return this.listaCursoExterno}
+
+    getListaCursoInterno():CursoInterno[]{return this.listaCursoInterno}
+
+    getListaPostagem():Postagem[]{return this.listaPostagem}
+
+    getUsuario(idUsuario:number):Usuario | undefined{
+        return this.listaUsuario.find(usuarioAtual => usuarioAtual.getIDUsuario() == idUsuario)
+    }
+
+    private listaVazia():void{
         console.warn("Sem Valores.")
     }
 
-    private static indiceExiste(indice:number,array:any[]):Boolean{
+    private indiceExiste(indice:number,array:any[]):Boolean{
         if(indice < 0){
             console.error("Valor Negativo")
         } else if(indice > array.length){
@@ -53,7 +68,7 @@ export class RedeMain{
 
     public login():boolean{
         const rlEmail = rl.question("Qual o e-mail para login? ")
-        const usFind = this.listaUsuarios.find(usAtual => usAtual.getEmail() == rlEmail)
+        const usFind = this.listaUsuario.find(usAtual => usAtual.getEmail() == rlEmail)
         if(usFind?.logar(
             rl.question("Digite sua senha: ",{hideEchoBack:true})
         )){
@@ -70,9 +85,9 @@ export class RedeMain{
 
     public cadastro():boolean{
         try{
-            this.listaUsuarios.push(new Usuario(
+            this.listaUsuario.push(new Usuario(
                 rl.question("Qual o nome de Usuario? "),
-                this.definirNovoID(this.listaUsuarios,this.IDsRemovidos.get("Usuarios")),
+                this.definirNovoID(this.listaUsuario,this.IDsRemovidos.get("Usuarios")),
                 rl.question("Qual o email do cadastro? "),
                 rl.question("Qual a senha de usuario? ")
             ))
