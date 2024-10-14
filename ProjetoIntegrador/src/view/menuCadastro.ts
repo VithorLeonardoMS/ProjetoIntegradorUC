@@ -2,6 +2,7 @@ import { RedeMain } from "../Controlers/RedeMain";
 const rl = require("readline-sync")
 
 export function menuCadastro(redeMain:RedeMain): void {
+	const usuarioLogado = redeMain.getUsuarioLogado()
 	let opcao = "";
 
 	while (opcao != '0') {

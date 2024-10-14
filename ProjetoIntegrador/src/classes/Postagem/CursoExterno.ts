@@ -42,7 +42,7 @@ export class CursoExterno extends Postagem{
     }
 
     alterarCargaHoraria(novaCargaHoraria:number){
-        const findUS = this.redeMain.getUsuario(this.getIDUsuario());
+        const findUS = this.redeMain.getUsuarioByID(this.getIDUsuario());
         if(findUS){
             this.setCargaHoraria(findUS,novaCargaHoraria);
         } else{

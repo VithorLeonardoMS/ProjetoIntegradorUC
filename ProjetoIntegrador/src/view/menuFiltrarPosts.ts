@@ -3,7 +3,8 @@ import { Usuario } from "../classes/Usuario";
 import { menuPerfil } from "./menuPerfil";
 const rl = require("readline-sync")
 
-export function menuFiltrarPosts(redeMain:RedeMain, usuarioLogado:Usuario): void {
+export function menuFiltrarPosts(redeMain:RedeMain): void {
+	const usuarioLogado = redeMain.getUsuarioLogado()
 	let opcao = "";
 
 	while (opcao != '0') {
@@ -27,7 +28,7 @@ export function menuFiltrarPosts(redeMain:RedeMain, usuarioLogado:Usuario): void
 		opcao = rl.question('Menu selecionado: ', {limit: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
 		                                            limitMessage: 'Digite um numero de 0 a 9'});
 
-		switch (opcao) {
+		switch (opcao) {//Implementar com opcao de acesso aos objetos...
 		case '0': break;
 		case '1': break;
 		case '2': break;

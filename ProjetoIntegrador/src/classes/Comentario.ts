@@ -1,4 +1,5 @@
 import { redeMain } from "../../Index"
+import { RedeMain } from "../Controlers/RedeMain"
 import { Postagem } from "./Postagem/Postagem"
 import { Resposta } from "./Resposta"
 import { Usuario } from "./Usuario"
@@ -6,20 +7,29 @@ import { Usuario } from "./Usuario"
 var rl = require('readline-sync')
 
 export class Comentario {
+    private redeMain:RedeMain
     private likes: number = 0
     private deslikes: number = 0
     private IDUsuario: number
+    private findUs:Usuario
     private IDComentario: number
     private IDPostagem: number
     private comentarioString:string
     private respostas: Resposta[] = []
     private idsRemovResp:number = 0
-   
-    constructor(IDUsuario, IDComentario: number, IDPostagem: number, comentarioString:string) {
+    private ultimaData:string
+
+    constructor(redeMain:RedeMain,IDUsuario:number, IDComentario: number, IDPostagem: number, comentarioString:string) {
+        const date = new Date()
+        this.ultimaData = `${date.getDay()}/${date.getMonth()+1}/${date.getFullYear()}`
         this.comentarioString = comentarioString
         this.IDUsuario = IDUsuario
         this.IDComentario = IDComentario
         this.IDPostagem = IDPostagem
+        let testeFind = redeMain.getUsuarioByID(IDUsuario)
+        if(testeFind) {this.findUs = testeFind} else{
+            throw new Error(`Usuario com id: ${IDUsuario} não encontrado em new Comentario(IDUS: ${IDUsuario}, IDComent: ${IDComentario}) `)
+        }
     }
 
     getLikes():number{return this.likes}
@@ -36,17 +46,23 @@ export class Comentario {
 
     getRespostas():Resposta[]{return this.respostas}
 
+    getUltimaData():string{return this.ultimaData}
+
+    getUsuario():Usuario{return this.findUs}
+
     protected getIdsRemovResp():number{return this.idsRemovResp}
 
-    getComentarioSimples():string{
-        return(`
-        ID_Comentario: ${this.IDComentario}
-        ${this.comentarioString}
-        Likes: ${this.likes}    Deslikes: ${this.deslikes}`);
+    getComentario():string{
+            return    `Data: ${this.ultimaData} \n`
+                    + `Usuario: ${this.findUs.getNome()}\n`
+                    + `ID_Comentario: ${this.IDComentario}`
+                    + `${this.comentarioString}\n`
+                    + `Likes: ${this.likes}\n`    
+                    + `Deslikes: ${this.deslikes}`
     }
 
     getComentRespostas():string{
-        return this.respostas.reduce((acumulador,respostaAtual)=> {return acumulador += respostaAtual.getRespostaSimples()},'')
+        return this.respostas.reduce((acumulador,respostaAtual)=> {return acumulador += respostaAtual.getResposta()},'')
     }
     //usuario externo respondendo o comentário atual
     responderThis(idUsRespondendo:number, respString?:string): void {
@@ -57,7 +73,7 @@ export class Comentario {
         } else {
             respostaString = respString
         }
-        let resposta = new Resposta(idUsRespondendo,this.definirIDResp(),this.IDPostagem,this.IDComentario,respostaString)
+        let resposta = new Resposta(idUsRespondendo,this.definirIDResp(),this.IDPostagem,this,respostaString)
         this.respostas.push(resposta)
     }
     /**
@@ -73,7 +89,17 @@ export class Comentario {
         } else{
             resposta = rl.question(`Digite o comentario: @${redeMain.getListaUsuarios().find(usAtual => usAtual.getIDUsuario() === findComent?.getIDUsuario())?.getNome()} `)
         }
-        this.respostas.push(new Resposta(idUsRespondendo,this.definirIDResp(), this.IDPostagem,this.IDComentario, resposta))
+        this.respostas.push(new Resposta(idUsRespondendo,this.definirIDResp(), this.IDPostagem,this, resposta))
+    }
+
+    setComentario(usuario:Usuario, edicaoComentario:string):boolean{
+        if(usuario.getLogado()){
+            this.comentarioString = edicaoComentario
+            const date = new Date()
+            this.ultimaData = `${date.getDay()}/${date.getMonth()+1}/${date.getFullYear()}`
+            return true
+        }
+        return false
     }
 
     addLikeComent():void{

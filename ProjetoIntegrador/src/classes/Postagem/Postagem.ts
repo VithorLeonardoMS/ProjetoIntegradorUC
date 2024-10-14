@@ -23,7 +23,7 @@ export class Postagem {
     private criador:Usuario
 
     constructor(redeMain:RedeMain, IDPostagem: number, IDUsuario:number, titulo: string, descricao: string, anexos: string[], cargaHoraria?:number) {
-        let dataAtual = `${date.getFullYear()}-${date.getDate()}-${date.getMonth() + 1}`
+        let dataAtual = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
         this.IDPostagem = IDPostagem
         this.IDUsuario = IDUsuario
         this.titulo = titulo
@@ -32,7 +32,7 @@ export class Postagem {
         this.datas.push(dataAtual)//Esta Correto
         this.anexos = anexos
         this.cargaHoraria = cargaHoraria
-        const findUS = redeMain.getUsuario(IDUsuario)
+        const findUS = redeMain.getUsuarioByID(IDUsuario)
         if(findUS){
             this.criador = findUS
         } else{

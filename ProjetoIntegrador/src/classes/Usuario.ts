@@ -18,7 +18,7 @@ export class Usuario {
     /**
      * listagemTipo = "linhas" ou "Tabelas"
      */
-    private listagemTipo: string = "Linhas"
+    private listagemTipo: "Linhas" | "Tabelas" = "Linhas"
     /**
      * Postslikes
      * lista todos os likes dados pelo usuário, usando um map, que organiza as informações da seguinte forma:
@@ -102,14 +102,14 @@ export class Usuario {
 
     }
 
-    getPerfilLinhas():string{
+    private getPerfilLinhas():string{
         return`ID:             ${this.IDUsuario}\n`
             + `Nome:           ${this.nome}\n`
             + `E-Mail:         ${this.email}\n`
             + `Foto De perfil: ${this.fotoPerfil}`
     }
 
-    getPerfilObjeto():object{
+    private getPerfilObjeto():object{
         return{
             ID: this.IDUsuario,
             Nome: this.nome,
@@ -193,12 +193,8 @@ export class Usuario {
         this.fotoPerfil = novaFoto
     }
 
-    setListagemTipo(tipo:string):boolean{
-        if(tipo == "Linhas" || tipo == "Tabelas"){
+    setListagemTipo(tipo:"Linhas" | "Tabelas"):void{
             this.listagemTipo = tipo
-            return true
-        }
-        return false
     }
 
     addSalvos(post: Postagem | Aula | CursoExterno | CursoInterno):void{

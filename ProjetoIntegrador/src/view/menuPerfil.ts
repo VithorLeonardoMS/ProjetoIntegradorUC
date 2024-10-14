@@ -3,7 +3,8 @@ import { Usuario } from "../classes/Usuario";
 import { menuEditPerfil } from "./menuEditPerfil";
 const rl = require("readline-sync")
 
-export function menuPerfil(redeMain:RedeMain, usuarioLogado:Usuario): void {
+export function menuPerfil(redeMain:RedeMain): void {
+	const usuarioLogado = redeMain.getUsuarioLogado()
 	let opcao = "";
 
 	while (opcao != '0') {
@@ -23,14 +24,11 @@ export function menuPerfil(redeMain:RedeMain, usuarioLogado:Usuario): void {
 		                                            limitMessage: 'Digite 0, 1, 2, 3 ou 4.'});
 
 		switch (opcao) {
-		case '0': break;
-		case '1': menuEditPerfil(redeMain,usuarioLogado); break;
+		case '0': break;//
+		case '1': menuEditPerfil(redeMain); break;//Pronto
 		case '2': usuarioLogado.printarUs(usuarioLogado.getPerfil()); break;
-		case '3': 
-            usuarioLogado.printarUs(usuarioLogado.getPostsSalvos())
-            break;
-        case '4': 
-			break;
+		case '3': usuarioLogado.printarUs(usuarioLogado.getPostsSalvos()); break;//Implementar opcao de acesso ao objeto
+        case '4': usuarioLogado.printarUs(usuarioLogado.getPostsCriados()) ;break;//Implementar opcao de acesso ao objeto
         
 		}
 		

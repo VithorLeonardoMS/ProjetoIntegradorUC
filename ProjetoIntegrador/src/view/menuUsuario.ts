@@ -4,7 +4,8 @@ import { menuFiltrarPosts } from "./menuFiltrarPosts";
 import { menuPerfil } from "./menuPerfil";
 const rl = require("readline-sync")
 
-export function menuUsuario(redeMain:RedeMain, usuarioLogado:Usuario): void {
+export function menuUsuario(redeMain:RedeMain): void {
+	const usuarioLogado = redeMain.getUsuarioLogado()
 	let opcao = "";
 
 	while (opcao != '0') {
@@ -21,16 +22,16 @@ export function menuUsuario(redeMain:RedeMain, usuarioLogado:Usuario): void {
 		console.log(`- 5. Buscar Postagens   -`);
 		console.log(`-------------------------`);
 
-		opcao = rl.question('Menu selecionado: ', {limit: ['0', '1', '2', '3', '4'],
-		                                            limitMessage: 'Digite 0, 1, 2, 3 ou 4.'});
+		opcao = rl.question('Menu selecionado: ', {limit: ['0', '1', '2', '3', '4', '5'],
+		                                            limitMessage: 'Digite 0, 1, 2, 3, 4 ou 5.'});
 
 		switch (opcao) {
 		case '0': break;
-		case '1': menuPerfil(redeMain,usuarioLogado); break;
+		case '1': menuPerfil(redeMain); break;//Implementar opcoes de acesso aos objetos
 		case '2': break;//Implementar
 		case '3': break;//Implementar futuramente
-		case '4': break;//Implemenatr 
-        case '4': menuFiltrarPosts(redeMain,usuarioLogado); break;
+		case '4': break;//Implemenatar
+        case '5': menuFiltrarPosts(redeMain); break;
 		}
 		
 		console.clear();
