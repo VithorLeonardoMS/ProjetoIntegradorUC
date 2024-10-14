@@ -21,9 +21,9 @@ export function menuCadastro(redeMain:RedeMain): void {
 
 		switch (opcao) {
 		case '0': break;
-		case '1': redeMain.login(); break;
-		case '2': redeMain.cadastro(); break;
-		case '3': //Implementar
+		case '1': redeMain.loginRl(); break;
+		case '2': redeMain.cadastroRl(); break;
+		case '3': //Implementar 
 		}
 		
 		console.clear();

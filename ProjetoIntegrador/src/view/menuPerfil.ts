@@ -1,5 +1,5 @@
 import { RedeMain } from "../Controlers/RedeMain";
-import { Usuario } from "../model/Usuario";
+import { Usuario } from "../classes/Usuario";
 import { menuEditPerfil } from "./menuEditPerfil";
 const rl = require("readline-sync")
 
@@ -15,7 +15,7 @@ export function menuPerfil(redeMain:RedeMain, usuarioLogado:Usuario): void {
 		console.log(`- 0. Voltar              -`);
 		console.log(`- 1. Editar              -`);
 		console.log(`- 2. Ver                 -`);
-		console.log(`- 3. Cursos Salvos       -`);
+		console.log(`- 3. Salvos              -`);
         console.log(`- 4. Meus Cursos         -`);
 		console.log(`--------------------------`);
 
@@ -25,11 +25,12 @@ export function menuPerfil(redeMain:RedeMain, usuarioLogado:Usuario): void {
 		switch (opcao) {
 		case '0': break;
 		case '1': menuEditPerfil(redeMain,usuarioLogado); break;
-		case '2': console.info(usuarioLogado.getPerfil(usuarioLogado)); break;
+		case '2': usuarioLogado.printarUs(usuarioLogado.getPerfil()); break;
 		case '3': 
-            
+            usuarioLogado.printarUs(usuarioLogado.getPostsSalvos())
             break;
-        case '4': break;
+        case '4': 
+			break;
         
 		}
 		

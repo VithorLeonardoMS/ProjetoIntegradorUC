@@ -1,10 +1,10 @@
-import { Comentario } from "../model/Comentario"
-import { Aula } from "../model/Postagem/Aula"
-import { CursoExterno } from "../model/Postagem/CursoExterno"
-import { CursoInterno } from "../model/Postagem/CursoInterno"
-import { Postagem } from "../model/Postagem/Postagem"
-import { Resposta } from "../model/Resposta"
-import { Usuario } from "../model/Usuario"
+import { Comentario } from "../classes/Comentario"
+import { Aula } from "../classes/Postagem/Aula"
+import { CursoExterno } from "../classes/Postagem/CursoExterno"
+import { CursoInterno } from "../classes/Postagem/CursoInterno"
+import { Postagem } from "../classes/Postagem/Postagem"
+import { Resposta } from "../classes/Resposta"
+import { Usuario } from "../classes/Usuario"
 import { menuUsuario } from "../view/menuUsuario"
 
 const rl = require("readline-sync")
@@ -26,7 +26,7 @@ export class RedeMain{
      * @type {Map<string, number>}
      * 
      */
-    public IDsRemovidos: Map<string, number> = new Map<string, number>
+    private IDsRemovidos: Map<string, number> = new Map<string, number>
     constructor(){
         //Definindo as chaves
         this.IDsRemovidos.set('Usuario',0)
@@ -66,24 +66,33 @@ export class RedeMain{
         return false
     }
 
-    public login():boolean{
+    public loginRl():boolean{
         const rlEmail = rl.question("Qual o e-mail para login? ")
         const usFind = this.listaUsuario.find(usAtual => usAtual.getEmail() == rlEmail)
         if(usFind?.logar(
             rl.question("Digite sua senha: ",{hideEchoBack:true})
-        )){
+            )
+        ){
             menuUsuario(this,usFind)
             return true
         }
         if(usFind){
             console.warn("Senha incorreta.")
 
-        }
+        } else {
         console.warn("Email não encontrado. ")
+        }
         return false
     }
 
-    public cadastro():boolean{
+
+    /**
+     * cadstro()- Cadstra um novo Usuario na listaUsuarios.
+     * Se o cadastro ocorrer coretamente, retorna true e o contrário também ocorre.
+     * Se ocorrer tudo certo leva o usuário para menuUsuario
+     * @returns {boolean}
+     */
+    public cadastroRl():boolean{
         try{
             this.listaUsuario.push(new Usuario(
                 rl.question("Qual o nome de Usuario? "),
@@ -91,6 +100,7 @@ export class RedeMain{
                 rl.question("Qual o email do cadastro? "),
                 rl.question("Qual a senha de usuario? ")
             ))
+
             return true
         } catch(error) {
             console.error(`Erro no Cadastro.`)

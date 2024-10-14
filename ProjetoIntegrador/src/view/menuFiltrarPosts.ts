@@ -1,5 +1,5 @@
 import { RedeMain } from "../Controlers/RedeMain";
-import { Usuario } from "../model/Usuario";
+import { Usuario } from "../classes/Usuario";
 import { menuPerfil } from "./menuPerfil";
 const rl = require("readline-sync")
 
