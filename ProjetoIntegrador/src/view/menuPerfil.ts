@@ -1,6 +1,7 @@
 import { RedeMain } from "../Controlers/RedeMain";
 import { Usuario } from "../classes/Usuario";
 import { menuEditPerfil } from "./menuEditPerfil";
+import { menuUsuario } from "./menuUsuario";
 const rl = require("readline-sync")
 
 export function menuPerfil(redeMain:RedeMain): void {
@@ -10,25 +11,25 @@ export function menuPerfil(redeMain:RedeMain): void {
 	while (opcao != '0') {
 		console.clear();
 
-		console.log(`--------------------------`);
-		console.log(`-        Perfil          -`);
-		console.log(`--------------------------`);
-		console.log(`- 0. Voltar              -`);
-		console.log(`- 1. Editar              -`);
-		console.log(`- 2. Ver                 -`);
-		console.log(`- 3. Salvos              -`);
-        console.log(`- 4. Meus Cursos         -`);
-		console.log(`--------------------------`);
+		console.log(` ________________________`);
+		console.log(`|        Perfil          |`);
+		console.log(`|------------------------|`);
+		console.log(`| 0. Voltar              |`);
+		console.log(`| 1. Editar              |`);
+		console.log(`| 2. Ver                 |`);
+		console.log(`| 3. Salvos              |`);
+        console.log(`| 4. Meus Cursos         |`);
+		console.log(`|________________________|`);
 
 		opcao = rl.question('Menu selecionado: ', {limit: ['0', '1', '2', '3', '4'],
 		                                            limitMessage: 'Digite 0, 1, 2, 3 ou 4.'});
 
 		switch (opcao) {
-		case '0': break;//
+		case '0': menuUsuario(redeMain); break;//Implementar
 		case '1': menuEditPerfil(redeMain); break;//Pronto
 		case '2': usuarioLogado.printarUs(usuarioLogado.getPerfil()); break;
-		case '3': usuarioLogado.printarUs(usuarioLogado.getPostsSalvos()); break;//Implementar opcao de acesso ao objeto
-        case '4': usuarioLogado.printarUs(usuarioLogado.getPostsCriados()) ;break;//Implementar opcao de acesso ao objeto
+		case '3': redeMain.acessarPostRl(usuarioLogado,usuarioLogado.getPostsCriadosObject()); break;//Pronto
+        case '4': redeMain.acessarPostRl(usuarioLogado,usuarioLogado.getPostsCriadosObject()) ;break;//Pronto
         
 		}
 		

@@ -11,27 +11,26 @@ export function menuUsuario(redeMain:RedeMain): void {
 	while (opcao != '0') {
 		console.clear();
 
-		console.log(`-------------------------`);
-		console.log(`-        Usuario        -`);
-		console.log(`-------------------------`);
-		console.log(`- 0. Deslogar           -`);
-		console.log(`- 1. Perfil             -`);
-		console.log(`- 2. Notificacoes       -`);
-		console.log(`- 3. //Seguindo         -`);
-		console.log(`- 4. Buscar Usuarios    -`);
-		console.log(`- 5. Buscar Postagens   -`);
-		console.log(`-------------------------`);
+		console.log(` _______________________ `);
+		console.log(`|        Usuario        |`);
+		console.log(`|-----------------------|`);
+		console.log(`| 0. Deslogar           |`);
+		console.log(`| 1. Perfil             |`);
+		//console.log(`| ~. Notificacoes       |`);
+		console.log(`| 2. //Seguindo         |`);
+		console.log(`| 3. Buscar Usuarios    |`);
+		console.log(`| 4. Buscar Postagens   |`);
+		console.log(`|_______________________|`);
 
 		opcao = rl.question('Menu selecionado: ', {limit: ['0', '1', '2', '3', '4', '5'],
 		                                            limitMessage: 'Digite 0, 1, 2, 3, 4 ou 5.'});
 
 		switch (opcao) {
 		case '0': break;
-		case '1': menuPerfil(redeMain); break;//Implementar opcoes de acesso aos objetos
-		case '2': break;//Implementar
-		case '3': break;//Implementar futuramente
-		case '4': break;//Implemenatar
-        case '5': menuFiltrarPosts(redeMain); break;
+		case '1': menuPerfil(redeMain); break;//pronto
+		case '2': break;//Implementar futuramente
+		case '3': redeMain.pesquisarUsuariosRl(usuarioLogado); break;//Pronto
+		case '4': menuFiltrarPosts(redeMain); break;//Implementar
 		}
 		
 		console.clear();

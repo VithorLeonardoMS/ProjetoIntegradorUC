@@ -11,22 +11,22 @@ export function menuEditPerfil(redeMain:RedeMain): void {
 	while (opcao != '0') {
 		console.clear();
 		//Pronto
-		console.log(`--------------------------------`);
-		console.log(`-        Editar perfil         -`);
-		console.log(`--------------------------------`);
-		console.log(`- 0. Sair                      -`);
-		console.log(`- 1. Trocar nome               -`);
-		console.log(`- 2. Trocar senha              -`);
-		console.log(`- 3. Trocar foto de perfil     -`);
+		console.log(` ______________________________`);
+		console.log(`|        Editar perfil         |`);
+		console.log(`|------------------------------|`);
+		console.log(`| 0. Sair                      |`);
+		console.log(`| 1. Trocar nome               |`);
+		console.log(`| 2. Trocar senha              |`);
+		console.log(`| 3. Trocar foto de perfil     |`);
 		if(usuarioLogado.getListagemTipo() == "Linhas"){
-		console.log(`- 4. Listar em linhas (Ativo)  -`);
-		console.log(`- 5. Listar em tabelas         -`);
+		console.log(`| 4. Listar em linhas (Ativo)  |`);
+		console.log(`| 5. Listar em tabelas         |`);
 		} else{
-		console.log(`- 4. Listar em linhas          -`);
-		console.log(`- 5. Listar em tabelas (Ativo) -`);
+		console.log(`| 4. Listar em linhas          |`);
+		console.log(`| 5. Listar em tabelas (Ativo) |`);
 		
 		}
-		console.log(`-------------------------------`);
+		console.log(`|______________________________|`);
 		
 		opcao = rl.question('Menu selecionado: ', {limit: ['0', '1', '2', '3'],
 		                                            limitMessage: 'Digite 0, 1, 2 ou 3.'});

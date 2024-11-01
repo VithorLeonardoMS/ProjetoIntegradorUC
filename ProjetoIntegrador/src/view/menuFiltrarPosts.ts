@@ -10,20 +10,20 @@ export function menuFiltrarPosts(redeMain:RedeMain): void {
 	while (opcao != '0') {
 		console.clear();
 
-		console.log(`-------------------------`);
-		console.log(`-        Filtrar        -`);
-		console.log(`-------------------------`);
-		console.log(`- 0. Voltar             -`);
-		console.log(`- 1. Pelo nome          -`);
-		console.log(`- 2. Postagens          -`);
-		console.log(`- 3. Cursos Internos    -`);
-		console.log(`- 4. Cursos Externos    -`);
-        console.log(`- 5. Aulas              -`);
-        console.log(`- 6. Mais likes         -`);
-        console.log(`- 7. Menos Envios       -`);
-        console.log(`- 8. Data de envio      -`);
-		console.log(`- 9. Carga Horaria      -`);
-		console.log(`-------------------------`);
+		console.log(` _______________________`);
+		console.log(`|        Filtrar        |`);
+		console.log(`|-----------------------|`);
+		console.log(`| 0. Voltar             |`);
+		console.log(`| 1. Por nome           |`);
+		console.log(`| 2. Postagens          |`);
+		console.log(`| 3. Cursos Internos    |`);
+		console.log(`| 4. Cursos Externos    |`);
+        console.log(`| 5. Aulas              |`);
+        console.log(`| 6. Mais likes         |`);
+        console.log(`| 7. Menos likes        |`);
+        console.log(`| 8. Data de envio      |`);
+		console.log(`| 9. Carga Horaria      |`);
+		console.log(`|_______________________|`);
 
 		opcao = rl.question('Menu selecionado: ', {limit: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
 		                                            limitMessage: 'Digite um numero de 0 a 9'});

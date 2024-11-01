@@ -141,12 +141,19 @@ export class Usuario {
         return this.fotoPerfil
     }
 
-    getPostsSalvos():(string | object)[] |undefined{
+    getPostsSalvosObject():(CursoExterno | CursoInterno | Aula | Postagem)[]{
+        if(!this.logado){
+            throw new Error(`Usuario não logado em getCriados()`)
+        }
+        return this.postsSalvos
+    }
+
+    getPostsSalvos():(string | object)[]{
         if(!this.logado){
             throw new Error(`Usuario não logado em getSalvos()`)
         }
         if(this.postsSalvos.length == 0){
-            return undefined
+            return ["Nenhuma postagem salva"]
         } else {
             const retorno:(string|object)[]= []
             this.postsSalvos.forEach((postAtual)=>{
@@ -155,13 +162,19 @@ export class Usuario {
             return retorno
         }
     }
+    getPostsCriadosObject():(CursoExterno | CursoInterno | Aula | Postagem)[]{
+        if(!this.logado){
+            throw new Error(`Usuario não logado em getCriados()`)
+        }
+        return this.postsCriados
+    }
 
-    getPostsCriados():(string | object)[] | undefined{
+    getPostsCriados():(string | object)[]{
         if(!this.logado){
             throw new Error(`Usuario não logado em getCriados()`)
         }
         if(this.postsCriados.length == 0){
-            return undefined
+            return ["Nenhuma postagem criada"]
         } else {
             const retorno:(string | object)[] = []
             this.postsCriados.forEach((postAtual)=>{
@@ -204,6 +217,15 @@ export class Usuario {
         
         this.postsSalvos.push(post)
     }
+
+    seguirUS(idUsuarioSeguir:number):void{
+        if(!this.logado){
+            throw new Error(`Usuario não logado em seguirUS(${idUsuarioSeguir})`)
+        }
+        this.IDUsuariosSeguidos.push(idUsuarioSeguir)
+    }
+
+
 
     /**
      * processarLike() -> Adiciona todos os likes feitos pelo usuário no banco de dados, que é estruturado com Map,

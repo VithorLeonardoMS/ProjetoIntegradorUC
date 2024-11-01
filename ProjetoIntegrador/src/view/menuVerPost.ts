@@ -6,29 +6,29 @@ import { RedeMain } from "../Controlers/RedeMain";
 
 const rl = require("readline-sync")
 
-export function menuVerPosts(redeMain:RedeMain,post: Postagem | Aula | CursoExterno | CursoInterno ): void {
+export function menuVerPost(redeMain:RedeMain,post: Postagem | Aula | CursoExterno | CursoInterno ): void {
     const usuarioLogado = redeMain.getUsuarioLogado()
     let opcao = "";
 
 	while (opcao != '0') {
 		console.clear();
-		console.log(`--------------------------`);
+		console.log(` ________________________`);
 		usuarioLogado.printarUs(post.getPostagem(usuarioLogado))
-		console.log(`--------------------------`);
-		console.log(`- 0. Voltar              -`);
+		console.log(` ________________________`);
+		console.log(`| 0. Voltar              |`);
         usuarioLogado.hasLike(post)?
-        console.log(`- 1. Like (Dado)         -`):
-        console.log(`- 1. Like                -`);
+        console.log(`| 1. Like (Dado)         |`):
+        console.log(`| 1. Like                |`);
         usuarioLogado.hasDeslike(post)?
-		console.log(`- 2. Deslike (Dado)      -`):
-        console.log(`- 2. Deslike             -`);
-		console.log(`- 3. Comentarios         -`);
-        if(post instanceof CursoInterno){
-        console.log(`- 4. Acessar Aulas       -`);
+		console.log(`| 2. Deslike (Dado)      |`):
+        console.log(`| 2. Deslike             |`);
 
+		console.log(`| 3. Comentarios         |`);
+        if(post instanceof CursoInterno){
+        console.log(`| 4. Acessar Aulas       |`);
         }
 
-		console.log(`--------------------------`);
+		console.log(`|________________________|`);
 
         if(post instanceof CursoInterno){
             opcao = rl.question('Menu selecionado: ', {limit: ['0', '1', '2', '3', '4'],

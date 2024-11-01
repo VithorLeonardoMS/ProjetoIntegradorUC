@@ -6,6 +6,7 @@ import { Postagem } from "../classes/Postagem/Postagem"
 import { Resposta } from "../classes/Resposta"
 import { Usuario } from "../classes/Usuario"
 import { menuUsuario } from "../view/menuUsuario"
+import { menuVerPost } from "../view/menuVerPost"
 
 const rl = require("readline-sync")
 
@@ -167,6 +168,64 @@ export class RedeMain{
             console.error(`Erro em this.definirNovoID(this.listaUsuario,${this.IDsRemovidos.get("Usuarios")})`)
         }
         
+    }
+
+    verPostsPorQuantidade(posts:(CursoExterno | CursoInterno | Aula | Postagem)[], quantidade:number):(CursoExterno | CursoInterno | Aula | Postagem)[]{
+        let retorno:(CursoExterno | CursoInterno | Aula | Postagem)[] = []
+        if(quantidade > posts.length){
+            quantidade = posts.length 
+        }
+        posts.forEach((postagem,indice)=>{
+            (indice < quantidade)? retorno.push(postagem) : null
+        })
+        return retorno
+    }
+
+    acessarPostRl(usuarioLogado:Usuario, postagens:Postagem[]):void{
+        let teste = true
+        let quantidade = 10
+        while(true){
+            usuarioLogado.printarUs(this.verPostsPorQuantidade(postagens,quantidade))
+            console.info("Ver mais: -1\nVoltar: -2\nSelecionar post: ID da postagem")
+            let resposta = rl.questionInt("Retorno: ")
+            if(resposta = -2){
+                teste = false
+                console.clear()
+            } else if(resposta = -1){
+                console.clear()
+                quantidade += 10
+            }else {
+                let postFind = postagens.find(postagem => postagem.getIDPostagem() == resposta)
+                if(!postFind){
+                    console.clear()
+                    console.error("ID da postagem não encontrado")
+                } else{
+                    console.clear()
+                    menuVerPost(this,postFind)
+                    teste = false
+                }
+            }
+        }
+
+    } 
+
+    pesquisarUsuariosRl(usuarioLogado:Usuario){
+        let teste = true
+        while(teste){
+            console.log("0. voltar")
+            console.log("1. pesuisar")
+
+            let opcao = rl.questionInt("Digite a opcao: ")
+            switch(opcao){
+                case 0: teste = false; break;
+                case 1: 
+                console.clear()
+                    let nomePesquisado = rl.question("Digite o nome: ")
+                    usuarioLogado.printarUs(this.listaUsuario.filter(usuario =>
+                        usuario.getNome().toLowerCase().includes(nomePesquisado.toLowerCase())))
+                    break;
+            }
+        }
     }
 
     private addIDsRemovidos(classe:string, nEspecifico?:number){
