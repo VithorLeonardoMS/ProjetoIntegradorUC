@@ -11,13 +11,13 @@ import { menuVerPost } from "../view/menuVerPost"
 const rl = require("readline-sync")
 
 export class RedeMain{
-    private usuarioLogado:Usuario
-    private listaUsuario:Usuario[]
-    private listaAula:Aula[]
-    private listaCursoExterno:CursoExterno[]
-    private listaCursoInterno:CursoInterno[]
-    private listaPostagem:Postagem[]
-
+    
+    private listaUsuario:Usuario[] = [new Usuario("teste",0,"teste","teste123")]
+    private listaAula:Aula[] = []
+    private listaCursoExterno:CursoExterno[] = []
+    private listaCursoInterno:CursoInterno[] = []
+    private listaPostagem:Postagem[] = []
+    private usuarioLogado:Usuario = this.listaUsuario[0]
     /**
      * IDsRemovidos
      * 
@@ -98,20 +98,20 @@ export class RedeMain{
 
     /**
      * optionSenha()-> Cria um while que permite que o usuário insira uma senha, caso a senha esteja errada,
-     * ele pode tentar novamente 4 vezes, digitando 0 ele cancela a operação.
-     * Leva uma função de callback que executa o que for desejado com a senha que o usuario incerir,
+     * ele ainda pode tentar novamente mais 3 vezes, digitando 0 ele cancela a operação.
+     * Leva uma função de callback que executa o que for desejado com a senha que o usuario inserir,
      * a função de callback retorna uma boolean, caso retorne true o processo encerra.
      * Se a função de callback retornar true, o nétodo também retorna true
      * @param {Usuario} usuario 
      * @param callback 
      * @returns {boolean}
      */
-    private optionSenha(usuario:Usuario, callback:(senhaTestando:string) => boolean):boolean{
+    private optionSenha(callback:(senhaTestando:string) => boolean):boolean{
         let senhaTeste:string = '1'
         let contagem = 4
         while(senhaTeste != "0" && contagem != 0){
             console.info("0 -> para cancelar")
-            senhaTeste = rl.question("Digite sua senha: ",{hideEchoBack:true});
+            senhaTeste = rl.question("Digite a senha: ",{hideEchoBack:true});
             if (senhaTeste.length < 8) {
                 console.warn("A senha deve ter pelo menos 8 caracteres!");
                 continue; // Volta para o início do loop
@@ -130,11 +130,12 @@ export class RedeMain{
     }
  
     public loginRl():boolean{
-        const rlEmail = rl.question("Qual o e-mail para login? ");
-        const usFind = this.listaUsuario.find(usAtual => usAtual.getEmail() == rlEmail);
+        let rlEmail = rl.question("Qual o e-mail para login? ");
+        let usFind = this.listaUsuario.find(usAtual => usAtual.getEmail() == rlEmail);
         if(usFind){
-            this.optionSenha(usFind,(senhaTeste)=>{
-                if(this.setUsuarioLogado(usFind,senhaTeste)){
+            this.optionSenha((senhaTeste)=>{
+                if(usFind && this.setUsuarioLogado(usFind,senhaTeste)){
+                    this.usuarioLogado = this.listaUsuario[this.listaUsuario.length]
                     menuUsuario(this);
                     return true;
                 } 
@@ -156,13 +157,21 @@ export class RedeMain{
      * @returns {void}
      */
     public cadastroRl():void{
+        let nome = rl.question("Qual o nome de usuario? ")
+        let id = this.definirNovoID(this.listaUsuario, "Usuario")
+        let email = rl.question("Qual o email do cadastro? ")
+        let senha:string = ""
+        while(senha !== "0" && senha.length < 7){
+            senha = rl.question("Qual a senha de usuario? ")
+            console.info("0 -> para cancelar")
+            if (senha.length < 8) {
+                console.warn("A senha deve ter pelo menos 8 caracteres!");
+            } 
+        }
+        
         try{
-            this.listaUsuario.push(new Usuario(
-                rl.question("Qual o nome de usuario? "),
-                this.definirNovoID(this.listaUsuario,this.IDsRemovidos.get("Usuarios")),
-                rl.question("Qual o email do cadastro? "),
-                rl.question("Qual a senha de usuario? ")
-            ))
+            this.listaUsuario.push(new Usuario(nome, id, email, senha))
+            this.usuarioLogado = this.listaUsuario[this.listaUsuario.length -1]
             menuUsuario(this)
         } catch(error) {
             console.error(`Erro em this.definirNovoID(this.listaUsuario,${this.IDsRemovidos.get("Usuarios")})`)
@@ -247,28 +256,21 @@ export class RedeMain{
 
     }
 
-
-    definirNovoID(lista:Comentario[] | Resposta[] | Usuario[] | Aula[] | CursoExterno[] | CursoInterno[] | Postagem[], idsRemovidos?:number):number{
-        if((lista[0] instanceof Resposta || lista[0] instanceof Comentario) && idsRemovidos){
+    /**
+     * @returns {number} > Novo ID para item lista
+     * @param lista -> Lista que terá um novo ID definido
+     * @param tipo -> Deve ser o mesmo tipo dos itens da lista
+     * @param idsRemovidos -> Quando tipo for "Comentario" | "Resposta" é nescesário os 
+     *                        idsRemovidos
+     */
+    definirNovoID(lista:Comentario[] | Resposta[] | Usuario[] | Aula[] | CursoExterno[] | CursoInterno[] | Postagem[],tipo:"Usuario" | "Comentario" | "Resposta" | "Aula" | "CursoExterno" | "CursoInterno" |  "postagem", idsRemovidos?:number):number{
+        if((tipo == "Comentario" || tipo == "Resposta") && idsRemovidos){
             return lista.length + idsRemovidos
-        } else if(lista[0] instanceof Usuario){
-            let retorno = this.IDsRemovidos.get('Usuarios')
-            return (retorno? retorno:0) + lista.length
-        } else if(lista[0] instanceof Aula){
-            let retorno = this.IDsRemovidos.get('Aula')
-            return (retorno? retorno:0) + lista.length
-        } else if(lista instanceof Usuario){// ver se lista é analizada corretamente pois é uma array
-            let retorno = this.IDsRemovidos.get('Usuarios')
-            return (retorno? retorno:0) + lista.length  
-        } else if(lista[0] instanceof Usuario){
-            let retorno = this.IDsRemovidos.get('Usuarios')
-            return (retorno? retorno:0) + lista.length
-        } else if(lista[0] instanceof Usuario){
-            let retorno = this.IDsRemovidos.get('Usuarios')
+        } else if(tipo !== "Comentario" && tipo !== "Resposta"){
+            let retorno = this.IDsRemovidos.get(tipo)
             return (retorno? retorno:0) + lista.length
         } else{
-            throw new Error(`Erro em definirNovoID(${lista}, ${idsRemovidos})`);
-            return -1
+            throw new Error(`Erro em definirNovoID(${lista}, ${tipo}, ${idsRemovidos}) -> Precisa adcionar os idsRemovidos`);
         }
 
     }
