@@ -27,7 +27,12 @@ export function menuPerfil(redeMain:RedeMain): void {
 		switch (opcao) {
 		case '0': menuUsuario(redeMain); break;//Implementar
 		case '1': menuEditPerfil(redeMain); break;//Pronto
-		case '2': usuarioLogado.printarUs(usuarioLogado.getPerfil()); break;
+		case '2': usuarioLogado.printarUs(usuarioLogado.getPerfil());
+			rl.question(" ~ Tecle enter para continuar ~",{
+				hideEchoBack:true,
+				mask: ""
+			})
+			break;
 		case '3': redeMain.acessarPostRl(usuarioLogado,usuarioLogado.getPostsCriadosObject()); break;//Pronto
         case '4': redeMain.acessarPostRl(usuarioLogado,usuarioLogado.getPostsCriadosObject()) ;break;//Pronto
         

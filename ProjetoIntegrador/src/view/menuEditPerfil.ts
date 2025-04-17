@@ -35,7 +35,7 @@ export function menuEditPerfil(redeMain:RedeMain): void {
 		case '0': menuPerfil(redeMain); break;
 		case '1': 
 			usuarioLogado.setNome(
-			rl.question("Qual novo nome de Usuário? ")
+			rl.question("Qual novo nome de Usuario? ")
 			);
 			break;
 		case '2': 

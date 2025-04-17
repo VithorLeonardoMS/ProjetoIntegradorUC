@@ -8,7 +8,7 @@ import { Usuario } from "../classes/Usuario"
 import { menuUsuario } from "../view/menuUsuario"
 import { menuVerPost } from "../view/menuVerPost"
 
-const rl = require("readline-sync")
+const rl = require("readline-sync");
 
 export class RedeMain{
     
@@ -157,24 +157,42 @@ export class RedeMain{
      * @returns {void}
      */
     public cadastroRl():void{
-        let nome = rl.question("Qual o nome de usuario? ")
+        let nome = rl.question("Qual o nome de usuario? ").trim()
+        if("" == nome){
+            console.warn("O nome não pode estar vazio");
+            return;
+        }
+
         let id = this.definirNovoID(this.listaUsuario, "Usuario")
-        let email = rl.question("Qual o email do cadastro? ")
-        let senha:string = ""
-        while(senha !== "0" && senha.length < 7){
+        let email = rl.question("Qual o email do cadastro? ").trim()
+        if(email.split(" ").length > 1){
+            console.warn("O email não pode conter espacos");
+            return;
+        } 
+
+        let senha:string = " e e"
+
+        while(senha !== "0" && senha.length < 7 || senha.includes(" ")){
             senha = rl.question("Qual a senha de usuario? ")
             console.info("0 -> para cancelar")
-            if (senha.length < 8) {
-                console.warn("A senha deve ter pelo menos 8 caracteres!");
+            
+            if (senha.length < 8 || senha.includes(" ")) {
+                console.warn("A senha deve ter pelo menos 8 caracteres e nao pode conter espacos!");
             } 
         }
         
-        try{
-            this.listaUsuario.push(new Usuario(nome, id, email, senha))
-            this.usuarioLogado = this.listaUsuario[this.listaUsuario.length -1]
-            menuUsuario(this)
-        } catch(error) {
-            console.error(`Erro em this.definirNovoID(this.listaUsuario,${this.IDsRemovidos.get("Usuarios")})`)
+        if(senha == "0"){
+            console.log("Cadastro cancelado pelo usuário");
+        } else{
+            try{
+                let usuario = new Usuario(nome, id, email, senha);
+                usuario.logar(senha);
+                this.usuarioLogado = usuario;
+                this.listaUsuario.push(usuario);
+                menuUsuario(this);
+            } catch(error) {
+                console.error(`Erro em this.definirNovoID(this.listaUsuario,${this.IDsRemovidos.get("Usuarios")})`)
+            }
         }
         
     }

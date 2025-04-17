@@ -49,6 +49,7 @@ export class Usuario {
         this.IDUsuario = IDUsuario
         this.email = email
         this.senha = senha
+        this.listagemTipo = "Tabelas";
         this.postsLikes.set('Postagem', [])
         this.postsLikes.set('Aula', [])
         this.postsLikes.set('CursoInterno', [])
@@ -96,8 +97,10 @@ export class Usuario {
             return this.getPerfilLinhas()
         } else if(this.logado && this.listagemTipo == "Tabelas"){
             return this.getPerfilObjeto()
-        } else{
+        } else if(!this.logado){
             return "Usuario não logado"
+        } else{
+            return "Erro em getperfil()"
         }
 
     }
@@ -195,8 +198,9 @@ export class Usuario {
     setNome(novoNome: string): void {
         if(!this.logado){
             throw new Error(`Usuario não logado em alterarNome(${novoNome})`)
+            return;
         }
-            this.nome === novoNome
+            this.nome = novoNome
     }
 
     setFotoPerfil(novaFoto:string){
