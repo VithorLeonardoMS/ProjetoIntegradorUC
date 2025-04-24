@@ -26,7 +26,7 @@ export function menuUsuario(redeMain:RedeMain): void {
 		                                            limitMessage: 'Digite 0, 1, 2, 3, 4 ou 5.'});
 
 		switch (opcao) {
-		case '0':usuarioLogado.deslogar(); break;
+		case '0': usuarioLogado.deslogar(); break;
 		case '1': menuPerfil(redeMain); break;//pronto
 		case '2': break;//Implementar futuramente
 		case '3': redeMain.pesquisarUsuariosRl(usuarioLogado); break;//Pronto

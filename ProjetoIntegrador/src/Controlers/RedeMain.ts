@@ -7,6 +7,7 @@ import { Resposta } from "../classes/Resposta"
 import { Usuario } from "../classes/Usuario"
 import { menuUsuario } from "../view/menuUsuario"
 import { menuVerPost } from "../view/menuVerPost"
+import { optionSenha } from "./optionSenha"
 
 const rl = require("readline-sync");
 
@@ -96,44 +97,12 @@ export class RedeMain{
         return false
     }
 
-    /**
-     * optionSenha()-> Cria um while que permite que o usuário insira uma senha, caso a senha esteja errada,
-     * ele ainda pode tentar novamente mais 3 vezes, digitando 0 ele cancela a operação.
-     * Leva uma função de callback que executa o que for desejado com a senha que o usuario inserir,
-     * a função de callback retorna uma boolean, caso retorne true o processo encerra.
-     * Se a função de callback retornar true, o nétodo também retorna true
-     * @param {Usuario} usuario 
-     * @param callback 
-     * @returns {boolean}
-     */
-    private optionSenha(callback:(senhaTestando:string) => boolean):boolean{
-        let senhaTeste:string = '1'
-        let contagem = 4
-        while(senhaTeste != "0" && contagem != 0){
-            console.info("0 -> para cancelar")
-            senhaTeste = rl.question("Digite a senha: ",{hideEchoBack:true});
-            if (senhaTeste.length < 8) {
-                console.warn("A senha deve ter pelo menos 8 caracteres!");
-                continue; // Volta para o início do loop
-            }
-            if(callback(senhaTeste)){
-                senhaTeste = "0"
-                return true;
-            } else{
-                contagem--
-                console.warn("Senha incorreta!")
-                console.info(`Tentativas restantes: ${contagem}`)
-            }
-            
-        }
-        return false;
-    }
  
     public loginRl():boolean{
         let rlEmail = rl.question("Qual o e-mail para login? ");
-        let usFind = this.listaUsuario.find(usAtual => usAtual.getEmail() == rlEmail);
+        let usFind = this.listaUsuario.find(usAtual => usAtual.getEMail() == rlEmail);
         if(usFind){
-            this.optionSenha((senhaTeste)=>{
+            optionSenha((senhaTeste)=>{
                 if(usFind && this.setUsuarioLogado(usFind,senhaTeste)){
                     this.usuarioLogado = this.listaUsuario[this.listaUsuario.length]
                     menuUsuario(this);
@@ -172,7 +141,7 @@ export class RedeMain{
 
         let senha:string = " e e"
 
-        while(senha !== "0" && senha.length < 7 || senha.includes(" ")){
+        while(senha !== "0" && senha.length < 8 || senha.includes(" ")){
             senha = rl.question("Qual a senha de usuario? ")
             console.info("0 -> para cancelar")
             
@@ -240,7 +209,7 @@ export class RedeMain{
         let teste = true
         while(teste){
             console.log("0. voltar")
-            console.log("1. pesuisar")
+            console.log("1. pesquisar")
 
             let opcao = rl.questionInt("Digite a opcao: ")
             switch(opcao){
@@ -248,8 +217,32 @@ export class RedeMain{
                 case 1: 
                 console.clear()
                     let nomePesquisado = rl.question("Digite o nome: ")
-                    usuarioLogado.printarUs(this.listaUsuario.filter(usuario =>
-                        usuario.getNome().toLowerCase().includes(nomePesquisado.toLowerCase())))
+                    let listaDePerfis:string[] | object[];
+                    if(usuarioLogado.getListagemTipo() === "Linhas"){
+                        listaDePerfis = this.listaUsuario.reduce<string[]>((acc,usAtual)=>{ acc.push(usAtual.getPerfilLinhas()); return acc},[])
+                    } else{
+                        listaDePerfis = this.listaUsuario.reduce<object[]>((acc,usAtual)=>{ acc.push(usAtual.getPerfilObjeto()); return acc},[])
+                    }
+
+                    const idsEncontrados:number[] = this.listaUsuario.reduce<number[]>((acc, usuario,index)=> {
+                        if(usuario.getNome().toLowerCase().includes(nomePesquisado.toLowerCase())){
+                            acc.push(index);
+                        }
+                        
+                        return acc;
+                    }, [])
+
+                    if(usuarioLogado.getListagemTipo() == "Linhas"){
+                        listaDePerfis = (listaDePerfis as string[]).filter((us,index)=>{
+                            idsEncontrados.includes(index)
+                        })
+                    } else{
+                        listaDePerfis = (listaDePerfis as object[]).filter((us,index)=>{
+                            idsEncontrados.includes(index)
+                        })
+                    }
+
+                    usuarioLogado.printarUs(listaDePerfis)
                     break;
             }
         }

@@ -1,4 +1,5 @@
 
+import { optionSenha } from "../Controlers/optionSenha"
 import { Comentario } from "./Comentario"
 import { Aula } from "./Postagem/Aula"
 import { CursoExterno } from "./Postagem/CursoExterno"
@@ -10,7 +11,7 @@ import { Resposta } from "./Resposta"
 export class Usuario {
     private nome: string
     private IDUsuario: number
-    private email: string
+    private EMail: string
     private senha: string
     private fotoPerfil:string
     private postsSalvos: (CursoExterno | CursoInterno | Aula | Postagem)[] = []
@@ -44,10 +45,10 @@ export class Usuario {
 
     private IDUsuariosSeguidos:number[]
 
-    constructor(nome: string, IDUsuario: number, email: string, senha: string) {
+    constructor(nome: string, IDUsuario: number, EMail: string, senha: string) {
         this.nome = nome
         this.IDUsuario = IDUsuario
-        this.email = email
+        this.EMail = EMail
         this.senha = senha
         this.listagemTipo = "Tabelas";
         this.postsLikes.set('Postagem', [])
@@ -105,18 +106,20 @@ export class Usuario {
 
     }
 
-    private getPerfilLinhas():string{
+    public getPerfilLinhas():string{
         return`ID:             ${this.IDUsuario}\n`
             + `Nome:           ${this.nome}\n`
-            + `E-Mail:         ${this.email}\n`
-            + `Foto De perfil: ${this.fotoPerfil}`
+            + `E-Mail:         ${this.EMail}\n`
+            + `Foto de perfil: ${this.fotoPerfil}`
+            + `Senha:          ${this.senha}`
     }
 
-    private getPerfilObjeto():object{
+    public getPerfilObjeto():object{
         return{
             ID: this.IDUsuario,
             Nome: this.nome,
-            EMail: this.email,
+            EMail: this.EMail,
+            Senha: this.senha
         }
     }
 
@@ -124,7 +127,7 @@ export class Usuario {
         return this.logado
     }
 
-    getListagemTipo():string{
+    getListagemTipo():"Linhas" | "Tabelas"{
         return this.listagemTipo
     }
 
@@ -132,8 +135,8 @@ export class Usuario {
         return this.nome
     }
 
-    getEmail():string{
-        return this.email
+    getEMail():string{
+        return this.EMail
     }
 
     getIDUsuario():number{
@@ -191,7 +194,10 @@ export class Usuario {
 
     setSenha(senhaNova: string): void {
         if(!this.logado){
-            throw new Error(`Usuario não logado em alterarSenha(${senhaNova})`)
+            throw new Error(`Usuario não logado em alterarSenha(${senhaNova})`);
+            return;
+        } else{
+            this.senha = senhaNova;
         }
     }
 
@@ -205,13 +211,22 @@ export class Usuario {
 
     setFotoPerfil(novaFoto:string){
         if(!this.logado){
-            throw new Error(`Usuario não logado em addFotoPerfil(${novaFoto})`)
+            throw new Error(`Usuario não logado em setFotoPerfil(${novaFoto})`)
+            return
         }
         this.fotoPerfil = novaFoto
     }
 
+    setEMail(novoEMail:string){
+        if(!this.logado){
+            throw new Error(`Usuario não logado em setEMail(${novoEMail})`)
+            return
+        }
+        this.EMail = novoEMail;
+    }
+
     setListagemTipo(tipo:"Linhas" | "Tabelas"):void{
-            this.listagemTipo = tipo
+        this.listagemTipo = tipo
     }
 
     addSalvos(post: Postagem | Aula | CursoExterno | CursoInterno):void{
