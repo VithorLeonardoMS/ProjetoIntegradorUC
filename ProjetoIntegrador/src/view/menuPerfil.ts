@@ -34,7 +34,7 @@ export function menuPerfil(redeMain:RedeMain): void {
 			})
 			break;
 		case '3': redeMain.acessarPostRl(usuarioLogado,usuarioLogado.getPostsCriadosObject()); break;//Pronto
-        case '4': redeMain.acessarPostRl(usuarioLogado,usuarioLogado.getPostsCriadosObject()) ;break;//Pronto
+        case '4': redeMain.acessarPostRl(usuarioLogado,usuarioLogado.getPostsSalvosObject()) ;break;//Pronto
         
 		}
 		

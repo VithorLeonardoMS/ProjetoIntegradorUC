@@ -1,4 +1,5 @@
 import { RedeMain } from "../Controlers/RedeMain";
+import { filtragemContinua } from "../Controlers/filtragemContinua";
 import { Usuario } from "../classes/Usuario";
 import { menuPerfil } from "./menuPerfil";
 const rl = require("readline-sync")
@@ -30,7 +31,10 @@ export function menuFiltrarPosts(redeMain:RedeMain): void {
 
 		switch (opcao) {//Implementar com opcao de acesso aos objetos...
 		case '0': break;
-		case '1': break;
+		case '1':
+			
+			//filtragemContinua()
+			 break;
 		case '2': break;
 		case '3': break;
 		case '4': break;

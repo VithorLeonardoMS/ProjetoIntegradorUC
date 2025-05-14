@@ -13,7 +13,7 @@ const rl = require("readline-sync");
 
 export class RedeMain{
     
-    private listaUsuario:Usuario[] = [new Usuario("teste",0,"teste","teste123")]
+    private listaUsuario:Usuario[] = [new Usuario("cleber",0,"cleber@gmail.com","12345678"), new Usuario("Guilherme", 1, "guilherme@gmail.com","12345678")]
     private listaAula:Aula[] = []
     private listaCursoExterno:CursoExterno[] = []
     private listaCursoInterno:CursoInterno[] = []
@@ -56,13 +56,14 @@ export class RedeMain{
 
     setUsuarioLogado(usuarioNovo:Usuario, senhaTeste:string):boolean{
         if(senhaTeste.length < 8){
-            console.error("A senha deve conter pelo menos 8 caracteres")
+            console.error("A senha deve conter pelo menos 8 caracteres");
         } else if(usuarioNovo.logar(senhaTeste)){
-            this.usuarioLogado.deslogar()
-            this.usuarioLogado = usuarioNovo
-            return true
+            this.usuarioLogado.deslogar();
+            usuarioNovo.logar(senhaTeste);
+            this.usuarioLogado = usuarioNovo;
+            return true;
         } else{
-            console.error("Senha incorreta")
+            console.error("Senha incorreta");
         }
         return false
     }
@@ -104,7 +105,6 @@ export class RedeMain{
         if(usFind){
             optionSenha((senhaTeste)=>{
                 if(usFind && this.setUsuarioLogado(usFind,senhaTeste)){
-                    this.usuarioLogado = this.listaUsuario[this.listaUsuario.length]
                     menuUsuario(this);
                     return true;
                 } 
@@ -180,16 +180,16 @@ export class RedeMain{
     acessarPostRl(usuarioLogado:Usuario, postagens:Postagem[]):void{
         let teste = true
         let quantidade = 10
-        while(true){
+        while(teste){
             usuarioLogado.printarUs(this.verPostsPorQuantidade(postagens,quantidade))
             console.info("Ver mais: -1\nVoltar: -2\nSelecionar post: ID da postagem")
             let resposta = rl.questionInt("Retorno: ")
-            if(resposta = -2){
-                teste = false
-                console.clear()
-            } else if(resposta = -1){
-                console.clear()
-                quantidade += 10
+            if(resposta == -2){
+                teste = false;
+                console.clear();
+            } else if(resposta == -1){
+                console.clear();
+                quantidade += 10;
             }else {
                 let postFind = postagens.find(postagem => postagem.getIDPostagem() == resposta)
                 if(!postFind){
@@ -210,39 +210,31 @@ export class RedeMain{
         while(teste){
             console.log("0. voltar")
             console.log("1. pesquisar")
+            console.log("//2 Ver mais")
+            //
+            let opcao = rl.questionInt("Digite a opcao: ", {limit: ['0', '1'],
+            limitMessage: 'Digite 0 ou 1'})
 
-            let opcao = rl.questionInt("Digite a opcao: ")
             switch(opcao){
                 case 0: teste = false; break;
                 case 1: 
-                console.clear()
+                    console.clear()
                     let nomePesquisado = rl.question("Digite o nome: ")
-                    let listaDePerfis:string[] | object[];
+                    let listaDePerfis:Usuario[];
+                    listaDePerfis = this.listaUsuario.filter(usAtual => usAtual.getNome().toLowerCase().includes(nomePesquisado.toLowerCase()))
                     if(usuarioLogado.getListagemTipo() === "Linhas"){
-                        listaDePerfis = this.listaUsuario.reduce<string[]>((acc,usAtual)=>{ acc.push(usAtual.getPerfilLinhas()); return acc},[])
-                    } else{
-                        listaDePerfis = this.listaUsuario.reduce<object[]>((acc,usAtual)=>{ acc.push(usAtual.getPerfilObjeto()); return acc},[])
-                    }
-
-                    const idsEncontrados:number[] = this.listaUsuario.reduce<number[]>((acc, usuario,index)=> {
-                        if(usuario.getNome().toLowerCase().includes(nomePesquisado.toLowerCase())){
-                            acc.push(index);
-                        }
-                        
-                        return acc;
-                    }, [])
-
-                    if(usuarioLogado.getListagemTipo() == "Linhas"){
-                        listaDePerfis = (listaDePerfis as string[]).filter((us,index)=>{
-                            idsEncontrados.includes(index)
+                        let acc:string[] = []
+                        listaDePerfis.forEach((usAtual)=>{
+                            acc.push(usAtual.getPerfilLinhas());
                         })
+                        usuarioLogado.printarUs(acc);
                     } else{
-                        listaDePerfis = (listaDePerfis as object[]).filter((us,index)=>{
-                            idsEncontrados.includes(index)
+                        let acc:object[] = []
+                        listaDePerfis.forEach((usAtual)=>{
+                            acc.push(usAtual.getPerfilObjeto());
                         })
+                        usuarioLogado.printarUs(acc);
                     }
-
-                    usuarioLogado.printarUs(listaDePerfis)
                     break;
             }
         }
