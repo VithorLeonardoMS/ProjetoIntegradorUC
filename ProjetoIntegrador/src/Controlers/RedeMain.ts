@@ -204,7 +204,12 @@ export class RedeMain{
         }
 
     } 
-
+    
+    /**
+     * Filtra ususarios apartir do nome;
+     * Funciona apenas no terminal
+     * @param {Usuario} usuarioLogado 
+     */
     pesquisarUsuariosRl(usuarioLogado:Usuario){
         let teste = true
         while(teste){

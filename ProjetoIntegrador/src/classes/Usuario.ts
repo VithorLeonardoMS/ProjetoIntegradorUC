@@ -244,8 +244,6 @@ export class Usuario {
         this.IDUsuariosSeguidos.push(idUsuarioSeguir)
     }
 
-
-
     /**
      * processarLike() -> Adiciona todos os likes feitos pelo usuário no banco de dados, que é estruturado com Map,
      * isso possibilita identificar se o like já foi dado ou não no objeto especifico, além disso, se o like já foi dado ele o retira do banco.
