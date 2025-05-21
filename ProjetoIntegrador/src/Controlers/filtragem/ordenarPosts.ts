@@ -18,17 +18,21 @@ export function ordenarPosts(posts:Post[],ordem:Ordem): Post[]{
                 if(cargaAtual){
                     let teste = true;
                     let cargaAuxiliar:number | undefined;
-                    for(let j = 0; teste && listaNova.length < j; j++){
+                    for(let j = 0; teste && listaNova.length > j; j++){
                         cargaAuxiliar = listaNova[j].getCargaHoraria()
-                        if(cargaAuxiliar && cargaAuxiliar > cargaAtual){
+                        if(cargaAuxiliar && cargaAuxiliar < cargaAtual){
                                 listaNova.splice(j, 0, post);
                                 teste = false;
                         }
+                    }
+                    if(!teste){//Caso post.getCargaHoraria() for menor que todas as outras cargas horárias
+                        listaNova.push(post)
                     }
                 }
             })
             break;
         case "dataDeEnvio":
+            
             break;
         case "maisLikes":
             break;

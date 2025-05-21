@@ -5,8 +5,8 @@ import { CursoInterno } from "../classes/Postagem/CursoInterno"
 import { Postagem } from "../classes/Postagem/Postagem"
 import { Resposta } from "../classes/Resposta"
 import { Usuario } from "../classes/Usuario"
-import { menuUsuario } from "../view/menuUsuario"
-import { menuVerPost } from "../view/menuVerPost"
+import { menuUsuario } from "../view/Menus/menuUsuario"
+import { menuVerPost } from "../view/Menus/menuVerPost"
 import { optionSenha } from "./optionSenha"
 
 const rl = require("readline-sync");

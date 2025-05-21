@@ -1,0 +1,273 @@
+body {
+  background-color: #f7fbff;
+  font-family: Arial, sans-serif;
+}
+
+.navbar,
+.container-fluid,
+.nav {
+  background-color: #5992ff;
+}
+
+.bg-dark {
+  background-color: #5992ff !important;
+}
+
+.logo {
+  height: 50px;
+  margin-right: 20px;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.1);
+}
+
+#form-search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 35px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* diminui o espaço */
+  margin: 15px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.btn-cursos {
+  background-color: white;
+  color: #333;
+  border: 0.5px solid black;
+  padding: 5px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.user {
+  color: black;
+  text-decoration: none;
+  margin-left: 10px;
+}
+
+#meio {
+  width: 100%;
+  background-color: #f7fbff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 180px 0;
+}
+
+#meio img {
+  max-width: 300px;
+  height: auto;
+}
+
+.owl-carousel .item img {
+  display: block;
+  justify-content: center;
+  width: 210px;
+  height: 210px;
+  border-radius: 10px;
+}
+
+.owl-carousel {
+  padding-top: 100px;
+  background-color: #ffffff;
+}
+
+.item {
+  height: 40%;
+  width: 90%;
+  background-color: rgb(231, 231, 231);
+  border-radius: 10px;
+}
+
+.carousel-caption {
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 20px;
+  border-radius: 10px;
+  color: #f0e9f0;
+  text-align: center;
+}
+
+.carousel-item {
+  height: 600px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.slide1 {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6)),
+    url("https://i.postimg.cc/jqw4zRq1/Whats-App-Image-2025-04-28-at-19-48-54-1.jpg");
+}
+
+.slide2 {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6)),
+    url("https://i.postimg.cc/Z560FDXp/Whats-App-Image-2025-04-28-at-19-50-04.jpg");
+}
+
+.slide3 {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6)),
+    url("https://i.postimg.cc/Yqy48WXf/Whats-App-Image-2025-04-28-at-19-48-55.jpg");
+}
+
+.slide4 {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6)),
+    url("https://i.postimg.cc/Rq54WvS8/Whats-App-Image-2025-04-28-at-19-48-56.jpg");
+}
+
+.slide5 {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6)),
+    url("https://i.postimg.cc/VLSsfHRn/Whats-App-Image-2025-04-28-at-19-48-55-1.jpg");
+}
+
+.btn-primary {
+  background-color: #a078a4;
+  color: #0c001d;
+  border: 0;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #63415c;
+  color: #f0e9f0;
+  transform: scale(1.05);
+}
+.form-control-dark {
+  border-color: var(--bs-gray);
+}
+.form-control-dark:focus {
+  border-color: #fff;
+  box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.25);
+}
+
+.text-small {
+  font-size: 85%;
+}
+
+.dropdown-toggle:not(:focus) {
+  outline: 0;
+}
+
+.courses{
+color: dimgray;
+}
+.courses {
+  background-color: #e6f0ff;
+  padding: 40px 20px;
+}
+
+.courses h2 {
+  font-size: 1.5rem;
+}
+
+.courses p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.course-card {
+  display: flex;
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.thumbnail {
+  width: 80px;
+  height: 80px;
+  background-color: #ccc;
+  border-radius: 5px;
+  margin-right: 15px;
+}
+
+.content h3 {
+  margin-bottom: 5px;
+}
+
+.content p {
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.content button {
+  padding: 5px 10px;
+  background-color: #b2b2b2;
+  border: 0.5px solid black;
+  color: rgb(0, 0, 0);
+  border-radius: 5px;
+  cursor: pointer;
+}
+/* Rodapé */
+.footer {
+  background-color: #6495ed; /* azul */
+  padding: 40px;
+  position: relative;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  margin-bottom: -50px;
+}
+
+.footer-content {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start; /* canto esquerdo (use flex-end para canto direito) */
+  align-items: center;
+}
+
+.camera-icon {
+  width: 24px;
+  height: 24px;
+  margin-left: 20px;
+}
+
+/* Título */
+.titulo {
+  text-align: center;
+  padding: 30px 10px 10px;
+  background-color: #f0f8ff;
+}
+
+/* Cards */
+.cards {
+  background-color: #f0f8ff;
+  padding: 10px;
+}
+
+.card {
+  background-color: #eaeaea;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 10px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.img-circle {
+  width: 60px;
+  height: 60px;
+  background-color: #cfdff1;
+  border-radius: 50%;
+}
+
+/* Projeto */
+.projeto {
+  background-color: #eaf3ff;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.projeto h2 {
+  margin-bottom: 15px;
+}
