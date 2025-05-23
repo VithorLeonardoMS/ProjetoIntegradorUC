@@ -1,12 +1,15 @@
 import { CursoExterno } from "../../../classes/Postagem/CursoExterno";
 
-const teste = document.getElementById("cursos");
-let secCursos:HTMLElement;
-if(teste){
-  secCursos = teste;  
-} else{
-    secCursos = document.createElement("section");
-}
+/*
+    <div class="course-card">
+      <img class="thumbnail"></img> //ou <div class="thumbnail"></div>
+      <div class="content">
+        <h3>Title</h3>
+        <p>Body text for whatever you'd like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.</p>
+        <button>Button</button>
+      </div>
+    </div>
+*/
 
 export function mostrarCursos(cursos:CursoExterno[], elementoPai:HTMLElement):void{
     cursos.forEach(curso => {
@@ -45,15 +48,3 @@ export function mostrarCursos(cursos:CursoExterno[], elementoPai:HTMLElement):vo
         elementoPai.appendChild(courseCard)
     })
 }
-
-
-/*
-    <div class="course-card">
-      <img class="thumbnail"></img> //ou <div class="thumbnail"></div>
-      <div class="content">
-        <h3>Title</h3>
-        <p>Body text for whatever you'd like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.</p>
-        <button>Button</button>
-      </div>
-    </div>
-*/

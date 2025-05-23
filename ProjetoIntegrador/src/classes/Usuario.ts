@@ -1,4 +1,5 @@
 
+import { RedeMain } from "../Controlers/RedeMain"
 import { optionSenha } from "../Controlers/optionSenha"
 import { Comentario } from "./Comentario"
 import { Aula } from "./Postagem/Aula"
@@ -68,12 +69,16 @@ export class Usuario {
      * @param {string} senhaTeste 
      * @returns {boolean}
      */
-    logar(senhaTeste:string):boolean{
-        if(senhaTeste === this.senha){
-            this.logado = true
-            return true
+    logar(senhaTeste:string, redeMain:RedeMain):boolean{
+        if(redeMain.getUsuarioLogado() === this){
+            if(senhaTeste === this.senha){
+                this.logado = true
+                return true
+            }
+            return false
         }
-        return false
+        return false;
+        
     }
 
     deslogar():boolean{

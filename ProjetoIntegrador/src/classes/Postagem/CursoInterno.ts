@@ -7,7 +7,7 @@ import { Postagem } from "./Postagem";
 export class CursoInterno extends Postagem{
     public aulas:Aula[]
 
-    constructor(redeMain:RedeMain, IDPostagem:number, IDUsuario:number, nomeUsuario:string, titulo:string, descricao:string, data:string, anexos:string[], cargaHoraria?:number){
+    constructor(redeMain:RedeMain, IDPostagem:number, IDUsuario:number, nomeUsuario:string, titulo:string, descricao:string, anexos:string[], cargaHoraria?:number){
         super(redeMain,IDPostagem,IDUsuario,titulo,descricao,anexos, cargaHoraria)
     }
     getPostagem(usuario: Usuario):string | object{

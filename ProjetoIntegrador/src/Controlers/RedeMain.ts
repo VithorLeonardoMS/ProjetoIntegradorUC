@@ -5,6 +5,7 @@ import { CursoInterno } from "../classes/Postagem/CursoInterno"
 import { Postagem } from "../classes/Postagem/Postagem"
 import { Resposta } from "../classes/Resposta"
 import { Usuario } from "../classes/Usuario"
+import { mostrarCursos } from "../view/Front/js/mostrarAulas"
 import { menuUsuario } from "../view/Menus/menuUsuario"
 import { menuVerPost } from "../view/Menus/menuVerPost"
 import { optionSenha } from "./optionSenha"
@@ -13,7 +14,7 @@ const rl = require("readline-sync");
 
 export class RedeMain{
     
-    private listaUsuario:Usuario[] = [new Usuario("cleber",0,"cleber@gmail.com","12345678"), new Usuario("Guilherme", 1, "guilherme@gmail.com","12345678")]
+    private listaUsuario:Usuario[] = [new Usuario("Guilherme", 1, "guilherme@gmail.com","12345678")]
     private listaAula:Aula[] = []
     private listaCursoExterno:CursoExterno[] = []
     private listaCursoInterno:CursoInterno[] = []
@@ -48,6 +49,23 @@ export class RedeMain{
 
     getListaCursoInterno():CursoInterno[]{return this.listaCursoInterno}
 
+    /**
+     * Função futuramente será integrada ao bando de dados;
+     * @returns {boolean} -> Feedback do processo;
+     * @param {Usuario} usuario -> Usuario criador - precisa estar logado;
+     * Os outros parâmetros são referentes ao constructor de CursoInterno.
+     */
+    createCursoInterno(usuario:Usuario,titulo:string, descricao:string, anexos?:string[]):boolean{
+        anexos = anexos? anexos : []
+        try{
+            const id = this.definirNovoID(this.getListaCursoInterno(),"CursoInterno");
+            this.listaCursoInterno.push(new CursoInterno(this, id, usuario.getIDUsuario(),usuario.getNome(),titulo, descricao, anexos))
+        }catch{
+            return false
+        }
+        return true;
+    }
+
     getListaPostagem():Postagem[]{return this.listaPostagem}
 
     getUsuarioByID(idUsuario:number):Usuario | undefined{
@@ -55,12 +73,12 @@ export class RedeMain{
     }
 
     setUsuarioLogado(usuarioNovo:Usuario, senhaTeste:string):boolean{
-        if(senhaTeste.length < 8){
-            console.error("A senha deve conter pelo menos 8 caracteres");
-        } else if(usuarioNovo.logar(senhaTeste)){
-            this.usuarioLogado.deslogar();
-            usuarioNovo.logar(senhaTeste);
+        this.usuarioLogado.deslogar();
+        if(senhaTeste.length < 8 || senhaTeste.includes(" ")){
+            console.error("A senha deve conter pelo menos 8 caracteres e não pode conter espaços");
             this.usuarioLogado = usuarioNovo;
+        } else if(usuarioNovo.logar(senhaTeste,this)){
+
             return true;
         } else{
             console.error("Senha incorreta");
@@ -119,6 +137,37 @@ export class RedeMain{
         return false
     }
 
+    /**
+     * 
+     */
+    public cadastro(nome:string,email:string, senha:string):boolean{
+        nome = nome.trim();
+        if("" == nome){
+            console.error("O nome não pode estar vazio");
+            return false;
+        }
+
+        let id = this.definirNovoID(this.listaUsuario, "Usuario")
+        email = email.trim()
+        if(email.split(" ").length > 1){
+            console.warn("O email não pode conter espacos");
+            return false;
+        }
+
+        if(senha.length > 7 && !senha.includes(" ")){
+            try{
+                let usuario = new Usuario(nome, id, email, senha);
+                this.listaUsuario.push(usuario);
+            } catch(error) {
+                console.error(`Erro em this.definirNovoID(this.listaUsuario,${this.IDsRemovidos.get("Usuarios")})`)
+                return false;
+            }
+            return true;
+        } else {
+            console.error("A senha deve ter pelo menos 8 caracteres e nao pode conter espacos!");
+            return false;
+        }
+    }
 
     /**
      * cadstroRl()- Cadstra um novo Usuario na listaUsuarios.
@@ -155,15 +204,15 @@ export class RedeMain{
         } else{
             try{
                 let usuario = new Usuario(nome, id, email, senha);
-                usuario.logar(senha);
+                this.usuarioLogado.deslogar()
                 this.usuarioLogado = usuario;
+                usuario.logar(senha,this);
                 this.listaUsuario.push(usuario);
                 menuUsuario(this);
             } catch(error) {
                 console.error(`Erro em this.definirNovoID(this.listaUsuario,${this.IDsRemovidos.get("Usuarios")})`)
             }
         }
-        
     }
 
     verPostsPorQuantidade(posts:(CursoExterno | CursoInterno | Aula | Postagem)[], quantidade:number):(CursoExterno | CursoInterno | Aula | Postagem)[]{
@@ -283,7 +332,6 @@ export class RedeMain{
 
     }
 
-    
     removerPost(objeto: CursoExterno | CursoInterno | Aula | Postagem ):boolean{
         if(objeto instanceof CursoExterno){
             let idsRemTest = this.IDsRemovidos.get('CursoExterno')
