@@ -17,7 +17,7 @@ export function mostrarCursos(cursos:CursoExterno[], elementoPai:HTMLElement):vo
         if(curso.getAnexos[0]){
             thumbnail = document.createElement("img");
             thumbnail.classList.add("thumbnail");
-            thumbnail.src = curso.getAnexos[0];
+            thumbnail.src = curso.getAnexos()[0];
         } else{
             thumbnail = document.createElement("div")
             thumbnail.classList.add("thumbnail");
@@ -35,12 +35,12 @@ export function mostrarCursos(cursos:CursoExterno[], elementoPai:HTMLElement):vo
         let button = document.createElement("button");
         button.textContent = "Acessar"
 
-        content.innerHTML += h3;
-        content.innerHTML += p;
-        content.innerHTML += button;
+        content.appendChild(h3);
+        content.appendChild(p);
+        content.appendChild(button);
 
-        courseCard.innerHTML += thumbnail;
-        courseCard.innerHTML += content;
+        courseCard.appendChild(thumbnail);
+        courseCard.appendChild(content);
 
         elementoPai.appendChild(courseCard)
     })

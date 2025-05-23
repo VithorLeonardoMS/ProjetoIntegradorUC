@@ -15,6 +15,9 @@ export class Usuario {
     private senha: string
     private fotoPerfil:string
     private postsSalvos: (CursoExterno | CursoInterno | Aula | Postagem)[] = []
+    /**
+     * 
+     */
     private postsCriados: (CursoExterno | CursoInterno | Aula | Postagem)[] = []
     /**
      * listagemTipo = "linhas" ou "Tabelas"
