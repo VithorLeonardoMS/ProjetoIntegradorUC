@@ -9,7 +9,8 @@
   <link rel="stylesheet" href="./carousel.css">
   <link rel="stylesheet" href="./css/owl.carousel.min.css">
   <link rel="stylesheet" href="./css/owl.theme.default.min.css">
-  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/comcourse-final.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
@@ -21,17 +22,22 @@
 
             <!-- LOGO + MENU JUNTOS À ESQUERDA -->
             <div class="d-flex align-items-center gap-3">
-                <img src="./img/logoCo.png"
-                    alt="Logo VizLab" class="logo">
-            </div>
-            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-                <input id="form-search"  type="search" class="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search">
-              </form>
+              <a href="Main.html"><img src="./img/logoCo.png"
+                  alt="Logo Coruja" class="logo"></a>
+              
+          </div>
+          <form id="form-search" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+            <input type="search" class="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search">
+          </form>
+          
             </div>
 
             <div class="topbar-right">
-              <button class="btn-cursos">Cursos</button>
-              <a href="http://localhost:5500/ProjetoIntegrador/src/view/Front/SobreNos.html#" class="user">Sobre Nós</a>
+              <a class="btn-cursos" href="#cursos">Cursos</a>
+              <a href="SobreNos.html" class="user">Sobre Nós</a>
+              <div class="perfil-bolinha">
+                <i class="fas fa-user"></i>
+              </div>
             </div>
       </div>
     </nav>
@@ -41,6 +47,8 @@
   <div id="meio">
     <img src="./img/nome.png" alt="cc">
   </div>
+
+ 
 
 <div id="fundo">
 <!--CARROSSEL-->
@@ -109,7 +117,7 @@
     <!-- Rodapé -->
     <footer class="footer">
       <div class="footer-content">
-        <h3>📷</h3>
+        <i class="fab fa-instagram"></i>
       </div>
     </footer>
 
@@ -120,6 +128,64 @@
     <script defer src="../assets/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"></script>
     <script src="./js/mostrarAulas.js"></script>
     <script src="./script.js"></script>
+
+    <div id="overlay">
+      <div id="overlay-content">
+        <div class="overlay-button">
+          <a href="Perfil.html" class="text-decoration-none text-white">
+            <i class="fas fa-user"></i> Seu perfil
+          </a>
+        </div>      
+        <div class="overlay-button">
+          <i class="fas fa-star"></i> Cursos salvos
+        </div>
+        <div class="overlay-button">
+          <i class="fas fa-folder-open"></i> Cursos criados
+        </div>
+        <div class="overlay-button">
+          <i class="fas fa-cog"></i> Configurações
+        </div>
+        <div class="overlay-button">
+          <i class="fas fa-headphones"></i> Suporte
+        </div>
+      </div>
+    </div>
+    
+    <script>
+      const overlay = document.getElementById('overlay');
+      document.querySelector('.perfil-bolinha').addEventListener('click', () => {
+        overlay.classList.add('show');
+      });
+      document.addEventListener('click', (e) => {
+        const content = document.getElementById('overlay-content');
+        if (!content.contains(e.target) && !e.target.closest('.perfil-bolinha')) {
+          overlay.classList.remove('show');
+        }
+      });
+      document.querySelectorAll('#overlay a').forEach(link => {
+    link.addEventListener('click', () => {
+      overlay.classList.remove('show');
+    });
+  });
+      $(".owl-carousel").owlCarousel({
+  responsive: {
+    0: {
+      items: 1
+    },
+    600: {
+      items: 2
+    },
+    1000: {
+      items: 3
+    }
+  }
+});
+
+
+    </script>
+    
+    
+    
 </body>
 
 </html>
