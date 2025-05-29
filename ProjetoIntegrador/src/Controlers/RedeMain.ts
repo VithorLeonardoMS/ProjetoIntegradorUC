@@ -1,14 +1,14 @@
-import { Comentario } from "../classes/Comentario"
-import { Aula } from "../classes/Postagem/Aula"
-import { CursoExterno } from "../classes/Postagem/CursoExterno"
-import { CursoInterno } from "../classes/Postagem/CursoInterno"
-import { Postagem } from "../classes/Postagem/Postagem"
-import { Resposta } from "../classes/Resposta"
-import { Usuario } from "../classes/Usuario"
-import { mostrarCursos } from "../view/Front/js/mostrarAulas"
-import { menuUsuario } from "../view/Menus/menuUsuario"
-import { menuVerPost } from "../view/Menus/menuVerPost"
-import { optionSenha } from "./optionSenha"
+import { Comentario } from "../classes/Comentario.js"
+import { Aula } from "../classes/Postagem/Aula.js"
+import { CursoExterno } from "../classes/Postagem/CursoExterno.js"
+import { CursoInterno } from "../classes/Postagem/CursoInterno.js"
+import { Postagem } from "../classes/Postagem/Postagem.js"
+import { Resposta } from "../classes/Resposta.js"
+import { Usuario } from "../classes/Usuario.js"
+import { mostrarCursos } from "../view/Front/js/mostrarAulas.js"
+import { menuUsuario } from "../view/Menus/menuUsuario.js"
+import { menuVerPost } from "../view/Menus/menuVerPost.js"
+import { optionSenha } from "./optionSenha.js"
 
 const rl = require("readline-sync");
 
@@ -113,6 +113,22 @@ export class RedeMain{
         } else{
             return true
         }
+        return false
+    }
+
+    public logar(eMail:string, senha:string){
+        let usFind = this.listaUsuario.find(usAtual => usAtual.getEMail() == eMail);
+        if(usFind){
+            if(usFind && this.setUsuarioLogado(usFind,senha)){
+                this.usuarioLogado = usFind
+                usFind.logar(senha,this);
+                return true;
+            } 
+            console.warn("Senha incorreta")
+        } else{
+            console.warn("Email não encontrado. ")
+        }
+        //    console.warn("Senha incorreta.")
         return false
     }
 

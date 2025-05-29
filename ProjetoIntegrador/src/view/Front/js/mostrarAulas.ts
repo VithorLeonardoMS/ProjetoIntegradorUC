@@ -17,7 +17,7 @@ export function mostrarCursos(cursos:CursoExterno[], elementoPai:HTMLElement):vo
         courseCard.classList.add("course-card");
 
         let thumbnail
-        if(curso.getAnexos[0]){
+        if(curso.getAnexos()[0]){
             thumbnail = document.createElement("img");
             thumbnail.classList.add("thumbnail");
             thumbnail.src = curso.getAnexos()[0];

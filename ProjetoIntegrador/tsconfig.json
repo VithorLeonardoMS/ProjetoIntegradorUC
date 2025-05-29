@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES6",                 // JavaScript moderno
+    "module": "ES6",                 // Usa módulos compatíveis com navegador
+    "outDir": "./dist",              // Onde os arquivos .js serão salvos
+    "rootDir": "./src",              // Onde estão os arquivos .ts
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "verbatimModuleSyntax": true     // Para as inpotações funcionarem corretamente dentro de .ts
+  },
+  "include": ["src/**/*"]
+}
