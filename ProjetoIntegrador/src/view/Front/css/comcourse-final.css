@@ -14,12 +14,12 @@ body {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 20px;
+  padding: 5px 15px;
 }
 
 .perfil-bolinha {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background-color: #f5f5f5;
   display: flex;
@@ -69,9 +69,9 @@ body {
 }
 
 .logo {
-  height: 50px;
-  max-width: 100px;
-  margin-right: 20px;
+  height: 35px;
+  max-width: 80px;
+  margin-right: 10px;
   transition: transform 0.3s ease;
 }
 
@@ -124,13 +124,15 @@ body {
 }
 
 #form-search input {
-  width: 100%;
+  height: 30px;
+  font-size: 14px;
+  padding: 5px 10px;
 }
 .topbar-right {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 15px 20px;
+  margin: 0;
   flex-wrap: wrap;
 }
 
@@ -393,7 +395,7 @@ hr {
 
 #overlay-content {
   position: fixed;
-  top: 120px;
+  top: 80px;
   right: 10px;
   background-color: transparent;
   display: flex;
@@ -422,6 +424,15 @@ hr {
   background-color: #c0c0c0;
 }
 
+.text-white {
+  --bs-text-opacity: 1;
+  color: rgba(var(--bs-black-rgb), var(--bs-text-opacity)) !important;
+}
+
+.text-white:hover {
+  --bs-text-opacity: 1;
+  color: rgba(var(--bs-write-rgb), var(--bs-text-opacity)) !important;
+}
 
 .profile-section {
   background-color: #e6f0ff;
@@ -489,10 +500,18 @@ h4{
 
 /* Responsividade */
 @media (max-width: 768px) {
+  .container-fluid {
+    flex-direction: column;
+    align-items: flex-start;
+  }
   .profile-section {
     flex-direction: column;
     align-items: center;
     padding: 30px 20px;
+  }
+
+  #form-search input {
+    width: 100%;
   }
 
   .separator-line {
@@ -502,6 +521,19 @@ h4{
   .user-info {
     text-align: center;
   }
+
+  .topbar-right {
+    justify-content: flex-start;
+    width: 100%;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn-cursos,
+  .user {
+    width: auto;
+  }
+
 }
 
 
