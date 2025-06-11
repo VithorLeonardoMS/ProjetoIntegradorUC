@@ -1,5 +1,5 @@
 import { RedeMain } from "../../Controlers/RedeMain";
-import { Usuario } from "../Usuario";
+import { Usuario } from "../UsuarioAntigo";
 import { Aula } from "./AulaAntigo";
 import { Postagem } from "./Postagem";
 

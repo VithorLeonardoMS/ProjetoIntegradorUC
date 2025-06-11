@@ -1,8 +1,8 @@
 
 import { RedeMain } from "../../Controlers/RedeMain"
 import { Comentario } from "../ComentarioAntigo"
-import { Resposta } from "../Resposta"
-import { Usuario } from "../Usuario"
+import { Resposta } from "../RespostaAntigo"
+import { Usuario } from "../UsuarioAntigo"
 
 let date = new Date()
 

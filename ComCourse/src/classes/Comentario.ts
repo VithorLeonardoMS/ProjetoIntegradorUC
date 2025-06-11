@@ -15,7 +15,7 @@ import {
     id!: number;
   
     @Column()
-    usuarioId: number;
+    usuarioId!: number;
   
     @Column({type:"varchar", length:255, nullable:false})
     texto: string;
@@ -35,8 +35,7 @@ import {
     @OneToMany(() => Comentario, (comentario) => comentario.parent)
     respostas: Comentario[];
 
-    constructor(usuarioId:number, texto:string, parent?: Comentario){
-      this.usuarioId = usuarioId;
+    constructor(texto:string, parent?: Comentario){
       this.texto = texto;
       if(parent){
         this.parent = parent;

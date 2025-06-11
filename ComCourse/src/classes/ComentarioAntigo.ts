@@ -1,8 +1,8 @@
 import { redeMain } from "../Index"
 import { RedeMain } from "../Controlers/RedeMain"
 import { Postagem } from "./Postagem/Postagem"
-import { Resposta } from "./Resposta"
-import { Usuario } from "./Usuario"
+import { Resposta } from "./RespostaAntigo"
+import { Usuario } from "./UsuarioAntigo"
 
 var rl = require('readline-sync')
 

@@ -1,53 +1,108 @@
 
 import { RedeMain } from "../Controlers/RedeMain"
 import { optionSenha } from "../Controlers/optionSenha"
-import { Comentario } from "./ComentarioAntigo"
+import { Comentario } from "./Comentario"
 import { Aula } from "./Postagem/AulaAntigo"
 import { CursoExterno } from "./Postagem/CursoExterno"
 import { CursoInterno } from "./Postagem/CursoInterno"
 import { Postagem } from "./Postagem/Postagem"
-import { Resposta } from "./Resposta"
+import { ReactionPost } from "./Reactions/ReactionPost"
+import { Resposta } from "./RespostaAntigo"
 
-
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    OneToMany,
+    JoinColumn,
+    CreateDateColumn,
+    ManyToMany,
+    JoinTable
+ } from 'typeorm';
+  
 export class Usuario {
-    private nome: string
+
+    @PrimaryGeneratedColumn()
     private IDUsuario: number
+
+    @Column({type:"varchar", length:200})
+    private nome: string
+
+    @Column({type:"varchar", unique:true, length:200})
     private EMail: string
+
+    @Column({type:"varchar", length:35})
     private senha: string
-    private fotoPerfil:string
-    private postsSalvos: (CursoExterno | CursoInterno | Aula | Postagem)[] = []
-    /**
-     * 
-     */
-    private postsCriados: (CursoExterno | CursoInterno | Aula | Postagem)[] = []
-    /**
-     * listagemTipo = "linhas" ou "Tabelas"
-     */
-    private listagemTipo: "Linhas" | "Tabelas" = "Linhas"
-    /**
-     * Postslikes
-     * lista todos os likes dados pelo usuário, usando um map, que organiza as informações da seguinte forma:
-     * Map<Tipo da postagem, [IDs das postagens] >
-     * @type {Map<string,number[]>}
-     * Mesma regra para postsDeslikes
-     * 
-     */
-    private postsLikes: Map<string, number[]> = new Map<string, number[]>
-    private postsDeslikes: Map<string, number[]> = new Map<string, number[]>
-    /** 
-    * comentsLikes
-    * lista todos os likes dados nos comentários de todas as publicões, organiza as informações da seguinte forma:
-    * Map<[Map<IDPostagem, IDComentarios[]]>
-    * @type {Map<number, number[]>}
-    * Mesma regra para comentsDeslikes
-    * 
-    */
-    private comentsLikes: Map<number, number[]>
-    private comentsDeslikes:Map<number, number[]>
 
-    private logado:boolean = false
+    @Column({type:"text", nullable:true})
+    private fotoPerfil!:string
 
-    private IDUsuariosSeguidos:number[]
+    @oneToMany(() => Postagem, (postagem) => postagem.usersSaves)//Implementar
+    private postsSalvos: Postagem[] = []
+
+    @OneToMany(() => Postagem, (postagem) => postagem.userCriador)
+    @JoinTable({
+        name:"User_Create_Post",
+        joinColumn: {
+            name: "usuario_id", 
+            referencedColumnName: "id"
+        },
+        inverseJoinColumn: {
+            name: "postagem_id",
+            referencedColumnName: "id"
+        }
+    })
+    private postsCriados: Postagem[] = []
+
+    @OneToMany(() => ReactionPost, (reacao) => reacao.idUsuario)
+    private _reacaoPost: ReactionPost[]= []
+
+    @ManyToMany(() => Comentario, (coment) => coment.usersLikes)
+    @JoinTable({
+        name:"Coment_Like_User",
+        joinColumn: {
+            name: "usuario_id", 
+            referencedColumnName: "id"
+        },
+        inverseJoinColumn: {
+            name: "comentario_id",
+            referencedColumnName: "id"
+        }
+    })
+    private comentsLikes: Comentario[] = []
+
+    @ManyToMany(() => Comentario, (coment) => coment.usersDeslikes)
+    @JoinTable({
+        name:"Coment_Deslike_User",
+        joinColumn: {
+            name: "usuario_id", 
+            referencedColumnName: "id"
+        },
+        inverseJoinColumn: {
+            name: "comentario_id",
+            referencedColumnName: "id"
+        }
+    })
+    private comentsDeslikes:Comentario[] = []
+
+    @ManyToMany(() => Usuario, (user) => user.seguidores)
+    @JoinTable({
+        name:"User_Follow_User",
+        joinColumn: {
+            name: "seguidor_id", 
+            referencedColumnName: "id"
+        },
+        inverseJoinColumn: {
+            name: "seguido_id", // o outro usuário que é seguido
+            referencedColumnName: "id"
+        }
+    })
+    private _seguidores: Usuario[] = []
+
+    get seguidores():Usuario[]{
+        return this._seguidores;
+    }
 
     constructor(nome: string, IDUsuario: number, EMail: string, senha: string) {
         this.nome = nome

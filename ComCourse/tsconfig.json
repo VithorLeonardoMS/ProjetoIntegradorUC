@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+      "target": "ES2020",               // ou superior
+      "module": "commonjs",             // ou "esnext"
+      "experimentalDecorators": true,   // habilita decorators
+      "emitDecoratorMetadata": true,    // necessário para TypeORM
+      "strict": true,
+      "skipLibCheck": true
+    }
+  }
+  

@@ -3,8 +3,8 @@ import { Aula } from "../../classes/Postagem/AulaAntigo";
 import { CursoExterno } from "../../classes/Postagem/CursoExterno";
 import { CursoInterno } from "../../classes/Postagem/CursoInterno";
 import { Postagem } from "../../classes/Postagem/Postagem";
-import { Resposta } from "../../classes/Resposta";
-import { Usuario } from "../../classes/Usuario";
+import { Resposta } from "../../classes/RespostaAntigo";
+import { Usuario } from "../../classes/UsuarioAntigo";
 
 type FiltroPostagem = {
     postagens: boolean;
