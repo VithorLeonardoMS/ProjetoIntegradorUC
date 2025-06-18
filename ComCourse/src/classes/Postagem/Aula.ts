@@ -1,3 +1,14 @@
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    OneToMany,
+    JoinColumn,
+    CreateDateColumn
+ } from 'typeorm';
+  
+
 
 export class Aula{
 

@@ -4,6 +4,7 @@
       "module": "commonjs",             // ou "esnext"
       "experimentalDecorators": true,   // habilita decorators
       "emitDecoratorMetadata": true,    // necessário para TypeORM
+      "esModuleInterop": true,
       "strict": true,
       "skipLibCheck": true
     }

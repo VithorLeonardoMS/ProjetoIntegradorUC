@@ -106,7 +106,6 @@ body {
   margin: 10px auto 0;
 }
 
-
 #form-search {
   display: flex;
   flex-grow: 1;
@@ -392,7 +391,6 @@ hr {
   pointer-events: auto;
 }
 
-
 #overlay-content {
   position: fixed;
   top: 80px;
@@ -488,7 +486,7 @@ hr {
   padding: 10px;
 }
 
-h4{
+h4 {
   margin: 5%;
 }
 
@@ -498,7 +496,6 @@ h4{
   word-wrap: break-word;
 }
 
-/* Estilo geral da seção de perfil */
 .profile-section {
   background-color: #e6f0ff;
   padding: 70px;
@@ -530,13 +527,64 @@ h4 {
   font-size: 14px;
   color: #333;
 }
+.saved-courses-box {
+  display: flex;
+  flex-direction: row; /* garantir que seja linha */
+  flex-wrap: nowrap; /* sem quebra */
+  min-height: 80px;
+  width: 100%;
+  gap: 0.5rem;
+  background-color: #f0f0f0;
+  padding: 1rem;
+  box-sizing: border-box;
+  justify-content: flex-start; /* deixar itens juntos */
+  align-items: center;
+}
+.saved-title-box {
+  margin-left: 20px;
+  margin-top: 0;
+}
 
-/* Responsividade para telas até 768px */
+.star-icon {
+  font-size: 20px;
+  position: relative;
+  top: -7px;
+  color: rgb(0, 0, 0);
+}
+
+.like-counter i,
+.dislike-counter i {
+  color: #7c7c7c;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.like-counter i:hover,
+.dislike-counter i:hover {
+  transform: scale(1.2);
+  color: #000000;
+}
+
+.like-count,
+.dislike-count {
+  font-weight: bold;
+  font-size: 14px;
+}
+.favorite-icon {
+  color: #7c7c7c;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.favorite-icon.favorited {
+  color: gold; /* cor quando está "favoritado" */
+}
+
 @media (max-width: 768px) {
   .container-fluid {
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 10%;
   }
 
   .profile-section {
@@ -569,7 +617,7 @@ h4 {
     box-sizing: border-box;
     margin: 10px 0;
   }
-  
+
   #form-search input {
     width: 100%;
     max-width: 500px;
@@ -603,7 +651,7 @@ h4 {
   }
 
   #overlay-content {
-    top: 90px;
+    top: 130px;
     right: 10px;
     width: 90%;
     max-width: 300px;
@@ -633,9 +681,12 @@ h4 {
     transform: translateY(0);
     opacity: 1;
   }
+  .saved-title-box {
+    margin-left: 15px; /* menor margem lateral */
+    margin-top: 65px; /* move mais para baixo */
+  }
 }
 
-/* Responsividade para telas até 480px */
 @media (max-width: 480px) {
   .main-title {
     font-size: 1.5rem;
@@ -643,17 +694,32 @@ h4 {
   }
 }
 
-.saved-courses-box {
-  min-height: 80px;
-  width: 100%;
-  gap: 0.5rem;
-  background-color: #f0f0f0;
-}
-
 @media (max-width: 576px) {
   .saved-courses-box {
+    display: flex;
     flex-direction: column;
     align-items: flex-start;
     text-align: left;
+  }
+}
+
+/* Responsivo para mobile */
+@media (max-width: 576px) {
+  .saved-title-box {
+    margin-left: 15px; /* menor margem lateral */
+    margin-top: 65px; /* move mais para baixo */
+  }
+
+  .star-icon {
+    font-size: 18px;
+    top: -3px; /* sobe um pouquinho menos */
+  }
+
+  .saved-title-box h2 {
+    font-size: 1.3rem;
+  }
+
+  .saved-title-box p {
+    font-size: 0.95rem;
   }
 }

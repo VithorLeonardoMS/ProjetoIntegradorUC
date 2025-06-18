@@ -2,25 +2,45 @@
 import { RedeMain } from "../../Controlers/RedeMain"
 import { Comentario } from "../ComentarioAntigo"
 import { Resposta } from "../RespostaAntigo"
-import { Usuario } from "../UsuarioAntigo"
+import { Usuario } from "../Usuario"
+
+
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    OneToMany,
+    JoinColumn,
+    CreateDateColumn,
+    ManyToMany,
+    JoinTable,
+    AfterLoad,
+    BeforeInsert,
+    BeforeUpdate
+ } from 'typeorm';
 
 let date = new Date()
 
-
 export class Postagem {
-    protected redeMain!:RedeMain
-    private IDPostagem: number
-    private IDUsuario: number
-    private titulo: string
-    private descricao: string
-    private comentarios!: Comentario[]
-    private idsRemovComent!: number
-    private datas!: string[]
-    private anexos: string[]
-    private deslikes!: number
-    private likes!: number
-    private cargaHoraria:number | undefined
-    private criador:Usuario
+    //protected redeMain!:RedeMain
+
+    @PrimaryGeneratedColumn()
+    public id!: number
+
+    @ManyToOne(() => Usuario, (usuario) => usuario.postsCriados)
+    @JoinColumn({name:"idUsuario"})
+    public IDUsuario: number
+    public titulo: string
+    public descricao: string
+    public comentarios!: Comentario[]
+    public idsRemovComent!: number
+    public datas!: string[]
+    public anexos: string[]
+    public deslikes!: number
+    public likes!: number
+    public cargaHoraria:number | undefined
+    public criador:Usuario
 
     constructor(redeMain:RedeMain, IDPostagem: number, IDUsuario:number, titulo: string, descricao: string, anexos: string[], cargaHoraria?:number) {
         let dataAtual = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
