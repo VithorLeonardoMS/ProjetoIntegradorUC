@@ -248,29 +248,57 @@
 
   <div id="overlay">
     <div id="overlay-content">
-      <div class="overlay-button">
-        <a href="Perfil.html" class="text-decoration-none text-white">
-          <i class="fas fa-user"></i> Seu perfil
-        </a>
-      </div>
-      <div class="overlay-button">
-        <a href="cursosSalvos.html" class="text-decoration-none text-white">
-          <i class="fa fa-bookmark"></i> Cursos Salvos
-        </a>
-      </div>
-      <div class="overlay-button">
-        <a href="meusCursos.html" class="text-decoration-none text-white">
-          <i class="fa fa-bookmark"></i> Cursos Criados
-        </a>
-      </div>
-      <div class="overlay-button">
-        <i class="fas fa-cog"></i> Configurações
-      </div>
-      <div class="overlay-button">
-        <i class="fas fa-headphones"></i> Suporte <!--LINKAR À CONTATO-->
-      </div>
+      <div class="overlay-button"><a href="Perfil.html" class="text-decoration-none text-white"><i class="fas fa-user"></i> Seu perfil</a></div>
+      <div class="overlay-button"><a href="cursosSalvos.html" class="text-decoration-none text-white"><i class="fa fa-bookmark"></i> Cursos Salvos</a></div>
+      <div class="overlay-button"><a href="meusCursos.html" class="text-decoration-none text-white"><i class="fa fa-bookmark"></i> Cursos Criados</a></div>
+      <div class="overlay-button"><a href="https://wa.me/5551999495754" class="text-decoration-none text-white"><i class="fas fa-headphones"></i> Suporte </a></div>
+      <div class="overlay-button text-white" onclick="excluirConta()"><i class="fas fa-cog"></i> Excluir Conta</div>
+      <div id="red" class="overlay-button text-red" onclick="sair()"><i class="fa fa-sign-out" ></i> Sair</div>
     </div>
   </div>
+
+  <div id="config-modal">
+    <div class="config-modal-content">
+      <button onclick="excluirConta()">Excluir Conta</button>
+      <button class="sair" onclick="sair()">Sair</button>
+    </div>
+  </div>
+
+  <script>
+    const overlay = document.getElementById('overlay');
+    const configModal = document.getElementById('config-modal');
+
+    document.querySelector('.perfil-bolinha').addEventListener('click', () => {
+      overlay.classList.add('show');
+    });
+
+    document.addEventListener('click', (e) => {
+      const content = document.getElementById('overlay-content');
+      if (!content.contains(e.target) && !e.target.closest('.perfil-bolinha')) {
+        overlay.classList.remove('show');
+      }
+    });
+
+    document.querySelectorAll('#overlay a').forEach(link => {
+      link.addEventListener('click', () => {
+        overlay.classList.remove('show');
+      });
+    });
+
+    function excluirConta() {
+      if (confirm('Tem certeza que deseja excluir sua conta?')) {
+        alert('Conta excluída!');
+        configModal.style.display = 'none';
+      }
+    }
+
+    function sair() {
+      if (confirm('Tem certeza que deseja sair da sua conta?')) {
+        configModal.style.display = 'none';
+      }
+    }
+  </script>
+
   <script src="./js/favoritar.js"></script>
 <script src="./js/likeDeslike.js"></script>
   <script src="./js/efeitos.js"></script>

@@ -418,6 +418,10 @@ hr {
   transition: background-color 0.2s;
 }
 
+#red.overlay-button{
+  color: red;
+}
+
 .overlay-button:hover {
   background-color: #c0c0c0;
 }
@@ -579,6 +583,63 @@ h4 {
 .favorite-icon.favorited {
   color: gold; /* cor quando está "favoritado" */
 }
+
+.config-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+#config-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+.config-modal-content {
+  background-color: #6c757d;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+}
+.config-modal-content h3 {
+  margin-bottom: 20px;
+  color: #000000;
+}
+.config-modal-content button {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #dee2e6;
+  color: rgb(0, 0, 0);
+  font-size: 16px;
+  cursor: pointer;
+}
+#config-modal.show {
+display: flex;
+}
+
+.config-modal-content .sair {
+  color:red;
+}
+
 
 @media (max-width: 768px) {
   .container-fluid {
