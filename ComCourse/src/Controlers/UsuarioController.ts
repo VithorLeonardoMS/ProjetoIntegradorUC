@@ -7,7 +7,7 @@ const UserRepository = AppDataSource.getRepository(Usuario);
 
 export class UsuarioController {
   async createUser(req: Request, res: Response) {
-    const { nome, email, senha } = req.body;
+    const { nome, email, senha, fotoPerfil } = req.body;
 
     if(!email || !senha || !nome) {
       res.status(400).json({ message: "Email, nome e senha são nescesários" });
@@ -22,12 +22,13 @@ export class UsuarioController {
     }
 
     const user = new Usuario(nome,email,senha);
-    const newUser = UserRepository.create(user);
-    await UserRepository.save(newUser);
+    if(fotoPerfil){
+      user.fotoPerfil = fotoPerfil
+    }
 
     res
       .status(201)
-      .json({ message: "Usuário criado com sucesso!", usuario: newUser });
+      .json({ message: "Usuário criado com sucesso!", usuario: user });
     return;
   }
 

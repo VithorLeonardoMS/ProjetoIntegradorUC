@@ -1,7 +1,5 @@
-
 import { RedeMain } from "../../Controlers/RedeMain"
-import { Comentario } from "../ComentarioAntigo"
-import { Resposta } from "../RespostaAntigo"
+import { Comentario } from "../Comentario"
 import { Usuario } from "../Usuario"
 
 
@@ -19,8 +17,7 @@ import {
     BeforeInsert,
     BeforeUpdate
  } from 'typeorm';
-
-let date = new Date()
+import { AnexoPostagem } from "./AnexoPostagem";
 
 export class Postagem {
     //protected redeMain!:RedeMain
@@ -30,176 +27,48 @@ export class Postagem {
 
     @ManyToOne(() => Usuario, (usuario) => usuario.postsCriados)
     @JoinColumn({name:"idUsuario"})
-    public IDUsuario: number
+    public usuario: Usuario
+
+    @ManyToMany(() => Usuario, usuario => usuario.postsSalvos)
+    public usersSaves:Usuario[] = []
+
+    @Column({type:"varchar", length:64, nullable:false})
     public titulo: string
-    public descricao: string
+
+    @Column({type:"varchar", length:256, nullable:true})
+    public descricao!: string
+
+    @OneToMany(() => Comentario, comentario => comentario.postagem)
+    @JoinColumn({ name: "postId" })
     public comentarios!: Comentario[]
-    public idsRemovComent!: number
-    public datas!: string[]
-    public anexos: string[]
-    public deslikes!: number
-    public likes!: number
-    public cargaHoraria:number | undefined
-    public criador:Usuario
 
-    constructor(redeMain:RedeMain, IDPostagem: number, IDUsuario:number, titulo: string, descricao: string, anexos: string[], cargaHoraria?:number) {
-        let dataAtual = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
-        this.IDPostagem = IDPostagem
-        this.IDUsuario = IDUsuario
-        this.titulo = titulo
-        this.descricao = descricao
-        this.datas.push(dataAtual)
-        this.datas.push(dataAtual)//Esta Correto
-        this.anexos = anexos
-        this.cargaHoraria = cargaHoraria
-        const findUS = redeMain.getUsuarioByID(IDUsuario)
-        if(findUS){
-            this.criador = findUS
-        } else{
-            throw new Error(`Erro em (postagem ou super)->constructor()->findUs é undefined->Usuario com ID: ${IDUsuario} não encontrado`);
-        }
+    @Column({type:"date", nullable:false})
+    public data:Date;
 
-    }
+    @OneToMany(() => AnexoPostagem, anexo => anexo.postagem)
+    public anexos!: AnexoPostagem[]
 
-    protected verificarUS():boolean{
-        return this.criador.getLogado()
-    }
-
-    getPostagem(usuario:Usuario):string | object{
-        if(usuario.getListagemTipo() == "Linhas"){
-            return `ID:       ${this.IDPostagem} ${this.getUltimaAlteracao()}\n`
-                + `Titulo:           ${this.titulo}\n`
-                + `Descricao:        ${this.descricao}\n`
-                + `Anexos:           ${this.anexos}`
-                + `Likes:            ${this.likes}  Deslikes: ${this.deslikes}`
-        } else if(usuario.getListagemTipo() == "Tabelas"){
-            return {
-                ID: this.IDPostagem,
-                Data: this.datas[0],
-                CargaHoraria: this.getCargaHorariaTable(),
-                Titulo: this.titulo,
-                Descricao: this.descricao,
-                Likes: this.likes,
-                Deslikes: this.deslikes
-                }
-        } else{
-            throw new Error(`Erro em getPostagem(${usuario})`)
-        }
-
-    }
-
-    public getIDPostagem():number{ return this.IDPostagem}
-
-    public getIDUsuario():number{return this.IDUsuario}
-
-    public getTitulo():string{return this.titulo}
-
-    public getDescricao():string{return this.descricao}
-
-    public getComentarios():Comentario[]{return this.comentarios}
-
-        /**
-     * getAllComents -> retorna todos os comentarios e as respostas dos comentários da postagem
-     * @returns {(Comentario | Resposta)[]}
+    /**
+     *  cargaHoraria -> Valor salvo como minutos que representa o tempo nescesário para concluir a atividade da postagem
      */
+    @Column({type:"number",nullable:true, length:4})
+    public cargaHoraria!:number
 
-    getAllComents(): (Comentario | Resposta)[] {
-        let retorno: (Comentario | Resposta)[] = []
-        this.comentarios.forEach(comentAtual => retorno.concat(comentAtual.getRespostas()))
-        return retorno.concat(this.comentarios)
-    }
+    constructor(usuario:Usuario, titulo:string, descricao?: string, anexos?: AnexoPostagem[], cargaHoraria?:number) {
+        this.usuario = usuario;
+        this.titulo = titulo
+        this.data = new Date();
 
-    protected getIdsRemovidosComents():number{return this.idsRemovComent}
+        if(anexos){
+            this.anexos = anexos;
+        }
 
-    public getAnexos():string[]{return this.anexos}
+        if(descricao){
+            this.descricao = descricao
+        }
 
-    public getLikes():number{return this.likes}
-
-    public getDeslikes():number{return this.deslikes}
-
-    public getCargaHoraria():number | undefined{return this.cargaHoraria}
-
-    protected getCargaHorariaTable():string{
-        if(this.cargaHoraria != 0){
-            return `${this.cargaHoraria}`
-        } else{
-           return '' 
+        if(cargaHoraria){
+            this.cargaHoraria = cargaHoraria;
         }
     }
-
-    protected getCargaHorariaString(){
-        if(this.cargaHoraria != 0){
-            return `${this.cargaHoraria}`
-        } else{
-           return 'nullo' 
-        }
-    }
-    public getDatas():string[]{return this.datas}
-
-    getUltimaAlteracao():string{
-        return this.datas[this.datas.length - 1]? this.datas[this.datas.length - 1]: "Data nao encontrada. "
-    }
-
-
-
-    getDataCriacao(): string {
-        return this.datas[0]
-    }
-
-    setCargaHoraria(usuario:Usuario, novaCargaHoraria:number){
-        if(usuario.getLogado() && usuario.getIDUsuario() == this.IDPostagem){
-            this.cargaHoraria = novaCargaHoraria
-        } else{
-            throw new Error(`erro em setCargahoraria(${usuario}, ${novaCargaHoraria})`)
-        }
-    }
-
-    setTitulo(novoTitulo: string):void {
-        let dataAtual = `${date.getFullYear()}-${date.getDate()}-${date.getMonth() + 1}`
-        this.titulo = novoTitulo
-        this.datas.push(dataAtual)
-    }
-
-    setDescricao(novaDescricao: string):void {
-        let dataAtual = `${date.getFullYear()}-${date.getDate()}-${date.getMonth() + 1}`
-        this.descricao = novaDescricao
-        this.datas.push(dataAtual)
-    }
-
-    setNewAnexos(novosAnexos:string[]){
-        this.anexos = novosAnexos
-    }
-
-    addAnexos(novosAnexos: string[]):void {
-        let dataAtual = `${date.getFullYear()}-${date.getDate()}-${date.getMonth() + 1}`
-        this.anexos = novosAnexos
-        this.datas.push(dataAtual)
-    }
-    addDeslike():void {
-        this.deslikes++
-    }
-
-    addLike():void {
-        this.likes++
-    }
-
-    rmLike():void{
-        this.likes--
-    }
-
-    rmDeslike():void{
-        this.deslikes--
-    }
-
-    rmComentario(idComentario: number): boolean {
-        let findComent = this.comentarios.find(comment => comment.getIDComentario() === idComentario)
-        let indexComent = findComent ? this.comentarios.indexOf(findComent) : false
-        if (indexComent) {
-            this.comentarios.splice(indexComent, 1)
-            this.idsRemovComent++
-            return true
-        }
-        return false
-    }
-
 }

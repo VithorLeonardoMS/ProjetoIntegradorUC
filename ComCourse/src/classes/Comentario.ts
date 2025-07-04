@@ -5,14 +5,19 @@ import {
     ManyToOne,
     OneToMany,
     JoinColumn,
-    CreateDateColumn
+    CreateDateColumn,
+    OneToOne
  } from 'typeorm';
+import { Postagem } from './Postagem/Postagem';
   
   
   @Entity("comentario")
   export class Comentario {
     @PrimaryGeneratedColumn()
     id!: number;
+
+    @ManyToOne(()=> Postagem, post => post.comentarios)
+    postagem:Postagem;
   
     @Column()
     usuarioId!: number;
@@ -35,7 +40,8 @@ import {
     @OneToMany(() => Comentario, (comentario) => comentario.parent)
     respostas: Comentario[];
 
-    constructor(texto:string, parent?: Comentario){
+    constructor(postagem:Postagem, texto:string, parent?: Comentario){
+      this.postagem = postagem;
       this.texto = texto;
       if(parent){
         this.parent = parent;
