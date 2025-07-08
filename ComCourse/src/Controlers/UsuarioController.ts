@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 const UserRepository = AppDataSource.getRepository(Usuario);
 
 export class UsuarioController {
-  async createUser(req: Request, res: Response) {
+  async create(req: Request, res: Response) {
     const { nome, email, senha, fotoPerfil } = req.body;
 
     if(!email || !senha || !nome) {
@@ -32,7 +32,7 @@ export class UsuarioController {
     return;
   }
 
-  async login(req: Request, res: Response) {
+  async login(req: Request, res: Response):Promise<Usuario | null |  void> {
     const { email, senha } = req.body;
 
     if (!email || !senha) {
@@ -40,7 +40,10 @@ export class UsuarioController {
       return;
     }
 
-    const existEmail = await UserRepository.findOneBy({ email });
+    const existEmail = await UserRepository.findOne({
+        where:{email}, 
+        relations:["comentario", "postagem"]
+      });
 
     if (!existEmail) {
       res.status(404).json({ message: "Email não encontrado" });
@@ -54,7 +57,7 @@ export class UsuarioController {
       return;
     }
 
-    res.status(200).json({ message: "Login realizado com sucesso!" });
+    res.status(200).json(existEmail);
     return;
   }
 

@@ -1,37 +1,47 @@
 import { Request, Response } from 'express';
 import { AppDataSource } from '../config/data-source';
 import { Comentario } from '../classes/Comentario';
+import { Usuario } from '../classes/Usuario';
 
 const comentarioRepository = AppDataSource.getRepository(Comentario);
+const usuarioRepository = AppDataSource.getRepository(Usuario);
 
 export class ComentarioController {
+
     // Listar todos os usuários
     async list(req: Request, res: Response) {
-        const comentarios = await comentarioRepository.find({
-            select:{
-                id:true,
-                usuarioId:true,
-                texto:true,
-                dataCriacao:true,
-                parentId:true,
-            }
-        });
+        try{
+            const comentarios = await comentarioRepository.find({
+                relations: ["usuario", "postagem"]
+            });
+            res.status(200).json(comentarios);
+            return;
 
-        res.json(comentarios);
-        return;
+        } catch(error){
+            console.error("Erro ao listar comentarios", error);
+            res.status(500).json({ mensagem: "Erro ao listar comentarios", error});
+            return;
+        }
     }
 
     // Criar novo usuário
     async create(req: Request, res: Response) {
         const { usuarioId, texto, parent} = req.body;
-
+        const numUserId = Number(usuarioId)
         let comentario;
 
         if(!usuarioId && !texto && !parent){
             if(parent){
-                comentario = comentarioRepository.create({ usuarioId, texto, parent});
+                comentario = comentarioRepository.create({ 
+                    usuario: { id: numUserId} as Usuario, //O objeto passa a ser tratado como um Usuario
+                    texto,
+                    parent
+                });
             } else{
-                comentario = comentarioRepository.create({ usuarioId, texto});
+                comentario = comentarioRepository.create({ 
+                        usuario: { id: numUserId} as Usuario, 
+                        texto
+                    });
             }
         } else{
             res.status(400).json({mensage: `usuarioId e texto precisam ser fornecidos!`})
@@ -40,7 +50,12 @@ export class ComentarioController {
 
         await comentarioRepository.save(comentario);
 
-        res.status(201).json(comentario);
+        const comentarioCriado = await comentarioRepository.findOne({
+            where:{id:comentario.id},
+            relations:["usuario","postagem"]//Garante que retorne as instancias completas
+        })
+
+        res.status(201).json(comentarioCriado);
         return;
     }
 
@@ -48,64 +63,105 @@ export class ComentarioController {
     async show(req: Request, res: Response) {
         const { id } = req.params;
 
-        const comentario = await comentarioRepository.findOneBy({ id: Number(id) });
+        const comentario = await comentarioRepository.findOne({
+             where:{ id: Number(id)},
+             relations: ["usuario", "postagem"]
+            });
 
         if (!comentario) {
             res.status(404).json({ message: 'Usuário não encontrado' });
             return;
         }
-        res.json({
-            id:comentario.id,
-            usuarioId:comentario.usuarioId,
-            texto:comentario.texto,
-            dataCriacao:comentario.dataCriacao,
-            parentId:comentario.parentId
-        });
+        res.json({});
         return;
     }
 
     // Atualizar usuário
     async update(req: Request, res: Response) {
         const { id } = req.params;
-        const { texto} = req.body;
+        const { texto, comentarioId} = req.body;
+        
+        const numUserId = Number(id)
+        const numComentarioId = Number(comentarioId)
 
-        const user = await comentarioRepository.findOneBy({ id: Number(id) });
+        try{
+            const usuario = await usuarioRepository.findOneBy({ id: numUserId });//Não precisa de relations: ["usuario"] neste caso
+    
+            if (!usuario) {
+                res.status(404).json({ message: 'Usuario não encontrado -> { id } = req.params' });
+                return;
+            }
+    
+            if(texto){
+                res.status(400).json({mensage: `"texto" precisa ser fornecido!`})
+                return;
+            }
+    
+            const comentario = await comentarioRepository.findOne({
+                where:{id:numComentarioId},
+                relations: ["usuario", "postagem"]
+            })
+    
+            if(!comentario){
+                res.status(404).json({mensage:`Usuario não encontrado | comentario.id = ${numComentarioId}`})
+                return;
+            }
+    
+            if(comentario.usuario.id == usuario.id){
+                comentario.texto = texto;
+                await comentarioRepository.save(comentario);
+                res.status(200).json(comentario);
+            } else{
+                res.status(403).json({mensage:`Usuario não tem permisão para editar comentario -> usuario.id = ${numUserId} | comentario.id = ${numComentarioId}`})
+                return;
+            }
 
-        if (!user) {
-            res.status(404).json({ message: 'Usuário não encontrado' });
+        } catch(error){
+            console.error("Erro ao atualizar comentario", error);
+            res.status(500).json({ mensagem: "Erro ao atualizar comentario", error });
             return;
         }
-
-        if(!name || !email || !password || !role){
-            res.status(400).json({mensage: `Algum dos campos de ser fornecido - name, email, password e role`})
-            return;
-        }
-
-        user.name = name;
-        user.email = email;
-        user.password = password;
-        user.role = role;
-
-        await comentarioRepository.save(user);
-
-        res.json(user);
-        return;
     }
 
-    // Deletar usuário
     async delete(req: Request, res: Response) {
         const { id } = req.params;
+        const {comentarioId} = req.body;
 
-        const user = await comentarioRepository.findOneBy({ id: Number(id) });
+        const numUserId = Number(id)
+        const numComentarioId = Number(comentarioId)
+        
+        try{
+            const usuario = await usuarioRepository.findOneBy({ id: numUserId });//Não precisa de relations: ["usuario", "postagem"] neste caso
+    
+            if (!usuario) {
+                res.status(404).json({ message: 'Usuario não encontrado -> { id } = req.params' });
+                return;
+            }
+    
+            const comentario = await comentarioRepository.findOne({
+                where:{id:numComentarioId},
+                relations: ["usuario", "postagem"]
+            })
+    
+            if(!comentario){
+                res.status(404).json({mensage:`Usuario não encontrado | comentario.id = ${numComentarioId}`})
+                return;
+            }
+    
+            if(comentario.usuario.id == usuario.id){
+                await comentarioRepository.remove(comentario);
+                res.status(204).send();
+                return;
+            } else{
+                res.status(403).json({mensage:`Usuario não tem permisão para deletar comentario -> usuario.id = ${numUserId} | comentario.id = ${numComentarioId}`})
+                return;
+            }
 
-        if (!user) {
-            res.status(404).json({ message: 'Usuário não encontrado' });
+        } catch(error){
+            console.error("Erro ao deletar comentario", error);
+            res.status(500).json({ mensagem: "Erro ao deletar comentario", error });
             return;
         }
 
-        await comentarioRepository.remove(user);
-
-        res.status(204).send();
-        return;
     }
 }
