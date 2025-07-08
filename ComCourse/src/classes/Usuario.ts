@@ -56,6 +56,9 @@ export class Usuario {
     @OneToMany(() => Postagem, (postagem) => postagem.usuario)
     public postsCriados: Postagem[] = []
 
+    @OneToMany(() => Comentario, coment => coment.usuario)
+    public comentarios!: Comentario[]
+
     @OneToMany(() => ReactionPost, (reacao) => reacao.idUsuario)
     public reacaoPost: ReactionPost[]= []
 
