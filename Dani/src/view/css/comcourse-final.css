@@ -788,10 +788,15 @@ h4 {
   width: 90%;
   max-width: 100%;
   height: 400px;
-  background-color: #a1a1a1;
   position: relative;
   margin: 80px auto 5px auto; /* Centraliza horizontalmente */
   border-radius: 8px;
+}
+
+.course-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .play-icon {

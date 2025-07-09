@@ -2,6 +2,7 @@ import "reflect-metadata";
 import "express-async-errors";
 import express from "express";
 import cors from "cors";
+import path from "path";
 import { routes } from "./routes";
 import { errorHandler } from "./middlewares/errorHandler";
 import { initializeDatabase } from "./database/connection";
@@ -20,6 +21,8 @@ class App {
   private middlewares(): void {
     this.app.use(express.json());
     this.app.use(cors());
+    // Serve static files from the 'src/view' directory
+    this.app.use(express.static(path.join(__dirname, "view")));
   }
 
   private routes(): void {
