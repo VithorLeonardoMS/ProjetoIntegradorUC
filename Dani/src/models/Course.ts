@@ -4,7 +4,7 @@ import { ICourse } from "../interfaces/ICourse";
 @Entity("courses")
 export class Course implements ICourse {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
   title: string;
@@ -17,4 +17,10 @@ export class Course implements ICourse {
 
   @Column({ nullable: true })
   externalLink?: string;
+
+constructor(title: string,description: string,imageUrl: string){
+this.title = title;
+this.description = description;
+this.imageUrl = imageUrl;
+}
 }
