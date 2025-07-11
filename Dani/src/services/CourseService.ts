@@ -2,6 +2,10 @@ import { ICourse } from "../interfaces/ICourse";
 import { CourseRepository } from "../repositories/CourseRepository";
 import { AppError } from "../utils/AppError";
 
+
+/**
+ * Permite separadamente um contrele maior de validação e tratamentos dos dados relacionados ao controller de forma organizada
+ */
 export class CourseService {
   private courseRepository: CourseRepository;
 
@@ -37,6 +41,9 @@ export class CourseService {
     await this.courseRepository.delete(id);
   }
 
+  /**
+   * Valida os dados do usuário, garantindo que estejam corretos. 
+   */
   private validateCourseData(data: ICourse): void {
     if (!data.title || data.title.trim() === "") {
       throw new AppError("Title is required", 400);

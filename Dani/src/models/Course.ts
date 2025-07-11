@@ -18,6 +18,15 @@ export class Course implements ICourse {
   @Column({ nullable: true })
   externalLink?: string;
 
+  // @Column({type:"date", nullable:false})
+  // public data:Date;
+
+  // @OneToMany(() => Comentario, comentario => comentario.postagem)
+  // @JoinColumn({ name: "postId" })
+  // public comentarios!: Comentario[]
+
+  
+
 constructor(title: string,description: string,imageUrl: string){
 this.title = title;
 this.description = description;
