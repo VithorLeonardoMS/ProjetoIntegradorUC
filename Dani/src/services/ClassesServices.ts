@@ -25,7 +25,7 @@ export class ClassesService {
     const classData: IClasses = {
       title: data.title,
       description: data.description,
-      mediaUrl: data.mediaUrl,
+      url: data.url,
       courses, // Associate course using ID received
     };
 
@@ -55,7 +55,7 @@ export class ClassesService {
     const classData: IClasses = {
       title: data.title,
       description: data.description,
-      mediaUrl: data.mediaUrl,
+      url: data.url,
       courses, // Associate course using ID received
     };
     return await this.classesRepository.update(id, classData);
@@ -77,8 +77,8 @@ export class ClassesService {
       throw new AppError("Description is required", 400);
     }
 
-    if (!data.mediaUrl || data.mediaUrl.trim() === "") {
-      throw new AppError("mediaUrl URL is required", 400);
+    if (!data.url || data.url.trim() === "") {
+      throw new AppError("url URL is required", 400);
     }
 
     if (!data.courseId) {

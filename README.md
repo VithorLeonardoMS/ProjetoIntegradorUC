@@ -1,1 +1,3 @@
 # ProjetoIntegrador
+
+![Arquitetura](./flow.jpg)

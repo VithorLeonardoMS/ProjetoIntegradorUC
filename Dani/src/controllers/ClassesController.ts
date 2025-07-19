@@ -16,7 +16,7 @@ export class ClassesController {
       id: classEntity.id,
       title: classEntity.title,
       description: classEntity.description,
-      mediaUrl: classEntity.mediaUrl,
+      url: classEntity.url,
       //   course: {
       //     id: classEntity.courses.id, // Inclui apenas o ID do curso
       //     title: classEntity.courses.title, // Inclui o título do curso se necessário
@@ -47,7 +47,7 @@ export class ClassesController {
       id: classEntity.id,
       title: classEntity.title,
       description: classEntity.description,
-      mediaUrl: classEntity.mediaUrl,
+      url: classEntity.url,
       //   course: {
       //     id: classEntity.courses.id, // Inclui apenas o ID do curso
       //     title: classEntity.courses.title, // Inclui o título do curso se necessário

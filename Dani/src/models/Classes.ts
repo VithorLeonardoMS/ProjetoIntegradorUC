@@ -15,7 +15,7 @@ export class Classes implements IClasses {
   description: string;
 
   @Column()
-  mediaUrl: string;
+  url: string;
 
   @ManyToOne(() => Course, (course) => course.classes)
   courses: ICourse; // Relacionamento com cursos
@@ -27,9 +27,9 @@ export class Classes implements IClasses {
   // @JoinColumn({ name: "postId" })
   // public comentarios!: Comentario[]
 
-  constructor(title: string, description: string, mediaUrl: string) {
+  constructor(title: string, description: string, url: string) {
     this.title = title;
     this.description = description;
-    this.mediaUrl = mediaUrl;
+    this.url = url;
   }
 }

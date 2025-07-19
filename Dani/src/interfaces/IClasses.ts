@@ -4,14 +4,14 @@ export interface IClasses {
   id?: number;
   title: string;
   description: string;
-  mediaUrl: string;
+  url: string;
   courses: ICourse;
 }
 
 export interface IRequestClasses {
   title: string;
   description: string;
-  mediaUrl: string;
+  url: string;
   courseId: number; // Para receber o ID do curso associado
 }
 
