@@ -1,10 +1,22 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  JoinTable,
+} from "typeorm";
 import { ICourse } from "../interfaces/ICourse";
+import { IClasses } from "../interfaces/IClasses";
+import { Classes } from "./Classes";
 
 @Entity("courses")
 export class Course implements ICourse {
   @PrimaryGeneratedColumn()
   id!: number;
+
+  @OneToMany(() => Classes, (classes) => classes.courses)
+  @JoinTable() // Associa tabela para gerenciar a relação muitos-para-muitos
+  classes: IClasses[]; // Relacionamento muitos-para-muitos com aulas
 
   @Column()
   title: string;
@@ -25,11 +37,9 @@ export class Course implements ICourse {
   // @JoinColumn({ name: "postId" })
   // public comentarios!: Comentario[]
 
-  
-
-constructor(title: string,description: string,imageUrl: string){
-this.title = title;
-this.description = description;
-this.imageUrl = imageUrl;
-}
+  // constructor(title: string, description: string, imageUrl: string) {
+  //   this.title = title;
+  //   this.description = description;
+  //   this.imageUrl = imageUrl;
+  // }
 }

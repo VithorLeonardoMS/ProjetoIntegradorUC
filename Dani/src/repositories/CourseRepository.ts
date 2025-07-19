@@ -18,16 +18,18 @@ export class CourseRepository implements ICourseRepository {
   }
 
   async findById(id: number): Promise<ICourse | null> {
-    return await this.repository.findOneBy({ id });
+    return await this.repository.findOne({
+      where: { id },
+      relations: ["classes"],
+    });
   }
 
   async findAll(): Promise<ICourse[]> {
-    return await this.repository.find();
+    return await this.repository.find({ relations: ["classes"] });
   }
 
   async update(id: number, data: ICourse): Promise<ICourse> {
     const result = await this.repository.update(id, data);
-
     if (result.affected === 0) {
       throw new AppError("Course not found", 404);
     }
@@ -43,7 +45,6 @@ export class CourseRepository implements ICourseRepository {
 
   async delete(id: number): Promise<void> {
     const result = await this.repository.delete(id);
-
     if (result.affected === 0) {
       throw new AppError("Course not found", 404);
     }

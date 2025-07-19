@@ -1,9 +1,21 @@
+import { IClasses } from "./IClasses";
+
 export interface ICourse {
   id?: number;
   title: string;
   description: string;
   imageUrl: string;
   externalLink?: string;
+  classes?: IClasses[];
+}
+
+export interface IRequestCourse {
+  id?: number;
+  title: string;
+  description: string;
+  imageUrl: string;
+  externalLink?: string;
+  classesId?: number[];
 }
 
 export interface ICourseRepository {

@@ -1,21 +1,36 @@
-import { ICourse } from "../interfaces/ICourse";
+import { ICourse, IRequestCourse } from "../interfaces/ICourse";
+import { ClassesRepository } from "../repositories/ClassesRepository";
 import { CourseRepository } from "../repositories/CourseRepository";
 import { AppError } from "../utils/AppError";
-
 
 /**
  * Permite separadamente um contrele maior de validação e tratamentos dos dados relacionados ao controller de forma organizada
  */
 export class CourseService {
   private courseRepository: CourseRepository;
+  private classRepository: ClassesRepository;
 
   constructor() {
     this.courseRepository = new CourseRepository();
+    this.classRepository = new ClassesRepository();
   }
 
-  async createCourse(data: ICourse): Promise<ICourse> {
+  async createCourse(data: IRequestCourse): Promise<ICourse> {
     this.validateCourseData(data);
-    return await this.courseRepository.create(data);
+    // Obtenha os IDs das aulas e busque as aulas correspondentes no banco
+    let classes;
+    if (data.classesId && data.classesId.length > 0) {
+      classes = await this.classRepository.findByIds(data.classesId); // Supondo que exista um repositório para Classes
+    }
+
+    const courseData = {
+      title: data.title,
+      description: data.description,
+      imageUrl: data.imageUrl,
+      externalLink: data.externalLink,
+      classes: classes, // Atribui as aulas encontradas ao curso
+    };
+    return await this.courseRepository.create(courseData);
   }
 
   async getCourseById(id: number): Promise<ICourse> {
@@ -32,9 +47,22 @@ export class CourseService {
     return await this.courseRepository.findAll();
   }
 
-  async updateCourse(id: number, data: ICourse): Promise<ICourse> {
+  async updateCourse(id: number, data: IRequestCourse): Promise<ICourse> {
     this.validateCourseData(data);
-    return await this.courseRepository.update(id, data);
+    // Obtenha os IDs das aulas e busque as aulas correspondentes no banco
+    let classes;
+    if (data.classesId && data.classesId.length > 0) {
+      classes = await this.classRepository.findByIds(data.classesId); // Supondo que exista um repositório para Classes
+    }
+
+    const courseData = {
+      title: data.title,
+      description: data.description,
+      imageUrl: data.imageUrl,
+      externalLink: data.externalLink,
+      classes: classes, // Atribui as aulas encontradas ao curso
+    };
+    return await this.courseRepository.update(id, courseData);
   }
 
   async deleteCourse(id: number): Promise<void> {
@@ -42,9 +70,9 @@ export class CourseService {
   }
 
   /**
-   * Valida os dados do usuário, garantindo que estejam corretos. 
+   * Valida os dados do usuário, garantindo que estejam corretos.
    */
-  private validateCourseData(data: ICourse): void {
+  private validateCourseData(data: IRequestCourse): void {
     if (!data.title || data.title.trim() === "") {
       throw new AppError("Title is required", 400);
     }

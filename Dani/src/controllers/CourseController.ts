@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { CourseService } from "../services/CourseService";
-import { ICourse } from "../interfaces/ICourse";
+import { ICourse, IRequestCourse } from "../interfaces/ICourse";
 
 export class CourseController {
   private courseService: CourseService;
@@ -10,7 +10,7 @@ export class CourseController {
   }
 
   async create(request: Request, response: Response): Promise<Response> {
-    const courseData: ICourse = request.body;
+    const courseData: IRequestCourse = request.body;
     const course = await this.courseService.createCourse(courseData);
     return response.status(201).json(course);
   }
@@ -28,7 +28,7 @@ export class CourseController {
 
   async update(request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
-    const courseData: ICourse = request.body;
+    const courseData: IRequestCourse = request.body;
     const course = await this.courseService.updateCourse(
       Number(id),
       courseData
