@@ -52,37 +52,12 @@
   
     <section class="container course-info"></section> 
 
-    <!-- lista de aulas -->
-    <!-- <section class="container mt-4 lessons">
-      <h3 class="fw-bold mb-3">Aulas</h3>
- 
-      <div class="course-card bg-white p-3 rounded shadow-sm d-flex gap-3">
-        <div class="course-image bg-secondary bg-opacity-10 rounded" style="width: 100px; height: 100px;"></div>
-        <div class="flex-grow-1">
-          <h5 class="mb-1">Curso de HTML</h5>
-          <p class="small text-muted">Aprenda os fundamentos da construção de páginas web com HTML5.</p>
-          <a href="NoCurso.html" class="btn btn-outline-primary btn-sm">Ver Curso</a>
-          <div class="mt-2 d-flex align-items-center gap-3">
-            <div class="like-counter d-flex align-items-center gap-1">
-              <i class="fas fa-thumbs-up like-btn"></i>
-              <span class="like-count">0</span>
-            </div>
-            <div class="dislike-counter d-flex align-items-center gap-1">
-              <i class="fas fa-thumbs-down dislike-btn"></i>
-              <span class="dislike-count">0</span>
-            </div>
-          </div>
-        </div>
-        <div class="align-self-start ms-auto">
-          <i class="far fa-star favorite-icon"></i>
-        </div>
-      </div>
-    
-     </section> -->
      <section class="container mt-4 lessons">
           <h3 class="fw-bold mb-3">Aulas</h3>
 
           <div class="lessons-container" id="lessons-container">
+            <div class="course-image bg-secondary bg-opacity-10 rounded" style="width: 100px; height: 100px;"></div>
+
               <!-- Os cartões de aula serão inseridos aqui dinamicamente -->
           </div>
       </section>
@@ -163,7 +138,10 @@
             const course = await response.json();
             
             const courseHero = document.querySelector('.course-hero');
-            courseHero.innerHTML = `<img src="${course.imageUrl}">`;
+            courseHero.innerHTML = `
+  <img src="${course.imageUrl}" alt="Imagem do Curso" class="img-fluid course-hero-image">
+`;
+
 
             const courseInfo = document.querySelector('.course-info');
             courseInfo.innerHTML = `
@@ -188,8 +166,8 @@
 
             course.classes.forEach(classItem => {
                 const lessonCard = `
-                    <div class="course-card bg-white p-3 rounded shadow-sm d-flex gap-3">
-                        <div class="course-image bg-secondary bg-opacity-10 rounded" style="width: 100px; height: 100px;"></div>
+                <div class="course-card bg-white p-3 rounded shadow-sm d-flex gap-3">
+        <img src="${course.imageUrl}" alt="Imagem do curso" class="rounded" style="width: 100px; height: 100px; object-fit: cover;">
                         <div class="flex-grow-1">
                             <h5 class="mb-1">${classItem.title}</h5>
                             <p class="small text-muted">${classItem.description}</p>

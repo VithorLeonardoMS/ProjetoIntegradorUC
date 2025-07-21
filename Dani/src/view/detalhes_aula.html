@@ -158,7 +158,7 @@
         const course = await response.json();
         
         const courseHero = document.querySelector('.course-hero');
-        courseHero.innerHTML = `<img src="${course.imageUrl}">`;
+        courseHero.innerHTML = `<img src="${course.url}">`;
 
 
         const courseInfo = document.querySelector('.course-info');

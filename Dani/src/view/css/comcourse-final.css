@@ -786,17 +786,22 @@ h4 {
 /* ---------- HERO ---------- */
 .course-hero {
   width: 90%;
-  max-width: 100%;
-  height: 400px;
-  position: relative;
-  margin: 80px auto 5px auto; /* Centraliza horizontalmente */
-  border-radius: 8px;
+  max-width: 1200px;
+  height: auto; /* Remove altura fixa */
+  margin: 0 auto 1.5rem auto;
+  border-radius: 16px;
+  padding-top: 4.5%;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.course-hero img {
+.course-hero img.course-hero-image {
   width: 100%;
-  height: 100%;
+  height: auto;
+  max-height: 400px;
   object-fit: cover;
+  display: block;
+  border-radius: 16px;
 }
 
 .play-icon {
@@ -1112,6 +1117,9 @@ h2 {
 
 /* 📱 Responsividade */
 @media (max-width: 768px) {
+  .course-hero img.course-hero-image {
+    max-height: 220px;
+  }
   .aula-card {
     flex-direction: column;
     align-items: flex-start;
@@ -1144,5 +1152,12 @@ h2 {
   .contador {
     margin-right: 0;
     text-align: left;
+  }
+}
+
+
+@media (min-width: 1200px) {
+  .course-hero img.course-hero-image {
+    max-height: 450px;
   }
 }
