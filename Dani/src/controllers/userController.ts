@@ -15,25 +15,26 @@ export class UserController {
 
   async login(req: Request, res: Response) {
     const { email, password } = req.body;
-
+  
     const user = await userRepository.findOneBy({ email });
-
+  
     if (!user) {
-      res.status(404).json({ message: "Usuario não encontrado" });
-      return;
+      return res.status(404).json({ message: "Usuario não encontrado" });
     }
-
+  
     const isValid = await bcryptjs.compare(password, user.password);
-
+  
     if (!isValid) {
-      res.status(401).json({ message: "senha invalida" });
-      return;
-    } else {
-      res.status(200).json({ message: "login bem sucedido" });
-      return;
+      return res.status(401).json({ message: "Senha inválida" });
     }
+  
+    return res.status(200).json({
+      message: "Login bem-sucedido",
+      id: user.id, // ESSENCIAL para salvar no localStorage
+    });
   }
-
+  
+  
   // Criar novo usuário
   async create(req: Request, res: Response) {
     const { name, email, password } = req.body;

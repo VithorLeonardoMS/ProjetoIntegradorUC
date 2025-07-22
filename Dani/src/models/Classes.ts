@@ -1,7 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import { 
+  Entity, 
+  Column, 
+  PrimaryGeneratedColumn, 
+  ManyToOne,
+  OneToMany
+ } from "typeorm";
 import { IClasses } from "../interfaces/IClasses";
 import { Course } from "./Course";
 import { ICourse } from "../interfaces/ICourse";
+import { Reaction } from "./Reaction";
 
 @Entity("classes")
 export class Classes implements IClasses {
@@ -19,6 +26,9 @@ export class Classes implements IClasses {
 
   @ManyToOne(() => Course, (course) => course.classes)
   courses: ICourse; // Relacionamento com cursos
+
+  @OneToMany(() => Reaction, (reaction:Reaction) => reaction.classes )
+  reactions:Reaction[];
 
   // @Column({type:"date", nullable:false})
   // public data:Date;

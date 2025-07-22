@@ -1,3 +1,4 @@
+import { User } from "../models/User";
 import { IClasses } from "./IClasses";
 
 export interface ICourse {
@@ -7,6 +8,7 @@ export interface ICourse {
   imageUrl: string;
   externalLink?: string;
   classes?: IClasses[];
+  userCreator: User
 }
 
 export interface IRequestCourse {
@@ -16,6 +18,7 @@ export interface IRequestCourse {
   imageUrl: string;
   externalLink?: string;
   classesId?: number[];
+  userId: number
 }
 
 export interface ICourseRepository {
@@ -24,4 +27,5 @@ export interface ICourseRepository {
   findAll(): Promise<ICourse[]>;
   update(id: number, data: ICourse): Promise<ICourse>;
   delete(id: number): Promise<void>;
+  //getUserCreator() Implementar
 }

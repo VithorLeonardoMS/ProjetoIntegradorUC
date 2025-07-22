@@ -1,10 +1,19 @@
 import { Router } from "express";
 import { CourseController } from "./controllers/CourseController";
 import { ClassesController } from "./controllers/ClassesController"; // Importa o novo controlador
+import {UserController} from "./controllers/userController";
 
 const routes = Router();
 const courseController = new CourseController();
 const classesController = new ClassesController(); // Cria uma instância do controlador de aulas
+const userController = new UserController();
+
+routes.get("/users", userController.list);
+routes.post("/users", userController.create);
+routes.get("/users/:id", userController.show);
+routes.put("/users/:id", userController.update);
+routes.delete("/users/:id", userController.delete);
+routes.post("/usersLogin", userController.login);
 
 // Rotas para cursos
 routes.post("/cursos", (req, res) => courseController.create(req, res));

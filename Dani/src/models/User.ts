@@ -5,8 +5,12 @@ import {
   BeforeInsert,
   BeforeUpdate,
   AfterLoad,
+  OneToMany,
+  ManyToMany
 } from "typeorm";
 import bcrypt from "bcryptjs";
+import { Reaction } from "./Reaction";
+import { Course } from "./Course";
 
 @Entity("users")
 export class User {
@@ -19,10 +23,19 @@ export class User {
   @Column({ unique: true, nullable: false })
   email: string;
 
+  @Column({type:"text", length:256 ,nullable: true})
+  profileUrl?:string;
+
   @Column({ type: "varchar", length: 255, nullable: false })
   password: string;
 
   private _previousPassword: string;
+
+  @OneToMany( () => Course, (course) => course.userCreator)
+  createdCourses:Course[]
+
+  @OneToMany(() => Reaction, (reaction) => reaction.user)
+  reactions: Reaction[]
 
   constructor(name: string, email: string, password: string) {
     this.name = name;

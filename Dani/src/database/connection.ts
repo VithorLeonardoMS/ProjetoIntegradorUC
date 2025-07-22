@@ -3,7 +3,7 @@ import { Course } from "../models/Course";
 import path from "path";
 import "dotenv/config";
 import { Classes } from "../models/Classes";
-
+import { User } from "../models/User";
 export const AppDataSource = new DataSource({
   type: "mysql",
   host: process.env.DB_HOST || "localhost",
@@ -11,7 +11,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "",
   database: process.env.DB_NAME || "courses_db",
-  entities: [Course, Classes],
+  entities: [Course, Classes,User],
   migrations: [path.join(__dirname, "./migrations/*.{js,ts}")],
   synchronize: true,
   // logging: process.env.NODE_ENV === "development",

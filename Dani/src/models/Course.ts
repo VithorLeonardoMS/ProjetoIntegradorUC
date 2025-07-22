@@ -4,10 +4,13 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   JoinTable,
+  ManyToOne,
 } from "typeorm";
 import { ICourse } from "../interfaces/ICourse";
 import { IClasses } from "../interfaces/IClasses";
 import { Classes } from "./Classes";
+import { Reaction } from "./Reaction";
+import { User } from "./User";
 
 @Entity("courses")
 export class Course implements ICourse {
@@ -30,6 +33,12 @@ export class Course implements ICourse {
   @Column({ nullable: true })
   externalLink?: string;
 
+  @OneToMany(() => Reaction, (reaction) => reaction.course )
+  reactions:Reaction[];
+
+  @ManyToOne(() => User, (user:User) => user.createdCourses)
+  userCreator:User
+
   // @Column({type:"date", nullable:false})
   // public data:Date;
 
@@ -42,4 +51,6 @@ export class Course implements ICourse {
   //   this.description = description;
   //   this.imageUrl = imageUrl;
   // }
+
+  
 }
