@@ -3,10 +3,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   
     if (!userId) {
       alert("Usuário não está logado.");
-      window.location.href = "login.html";
+      window.location.href = "cadastroELogin.html";
       return;
     }
-    
+  
     try {
       const response = await fetch(`http://localhost:3000/users/${userId}`);
       if (!response.ok) throw new Error("Erro ao carregar dados do usuário");
@@ -15,7 +15,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   
       const nomeElement = document.getElementById("user-name");
       nomeElement.textContent = user.name;
-  
+      const emailElement = document.getElementById("user-email");
+      emailElement.textContent = user.email;
       // Se quiser adicionar descrição, email, etc, pode usar user.email, user.bio, etc
       // document.getElementById("user-description").textContent = user.email;
   
@@ -40,4 +41,3 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
   
-  //teste

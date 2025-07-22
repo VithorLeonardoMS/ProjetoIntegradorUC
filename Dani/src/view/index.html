@@ -16,6 +16,15 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
+    <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css"
+/>
+
   </head>
 
   <body>
@@ -26,7 +35,7 @@
           class="container-fluid d-flex justify-content-between align-items-center"
         >
           <div class="d-flex align-items-center gap-3">
-            <a href="Main.html"
+            <a href="index.html"
               ><img src="./img/logoCo.png" alt="Logo Coruja" class="logo"
             /></a>
           </div>
@@ -52,11 +61,21 @@
       <img src="./img/nome.png" alt="cc" />
     </div>
 
-    <div id="fundo">
-      <div class="owl-carousel owl-theme" id="carousel-container">
-        <!-- Dynamic content will be loaded here -->
-      </div>
-    </div>
+    <!-- Owl Carousel container -->
+<div id="fundo" class="position-relative">
+  <div class="owl-carousel owl-theme" id="carousel-container">
+    <!-- Os cursos serão adicionados aqui via JS -->
+  </div>
+
+  <!-- Botões de navegação personalizados (opcional) -->
+  <button type="button" class="carousel-prev btn btn-light position-absolute top-50 start-0 translate-middle-y ms-2">
+    <i class="fas fa-chevron-left"></i>
+  </button>
+  <button type="button" class="carousel-next btn btn-light position-absolute top-50 end-0 translate-middle-y me-2">
+    <i class="fas fa-chevron-right"></i>
+  </button>
+</div>
+
 
     <div id="cursos">
       <section id="cursos" class="courses">
@@ -74,70 +93,34 @@
       </div>
     </footer>
 
-    <script>
-      // Fetch and dynamically load courses into the carousel and course cards
-      async function loadCourses() {
-        try {
-          const response = await fetch("http://localhost:3000/cursos");
-          const courses = await response.json();
+    <div id="overlay">
+      <div id="overlay-content">
+        <div class="overlay-button"><a href="Perfil.html" class="text-decoration-none text-white"><i class="fas fa-user"></i> Seu perfil</a></div>
+        <div class="overlay-button"><a href="cursosSalvos.html" class="text-decoration-none text-white"><i class="fa fa-bookmark"></i> Cursos Salvos</a></div>
+        <div class="overlay-button"><a href="meusCursos.html" class="text-decoration-none text-white"><i class="fa fa-bookmark"></i> Cursos Criados</a></div>
+        <div class="overlay-button"><a href="CriarCurso.html" class="text-decoration-none text-white"><i class="fa fa-plus"></i> Criar Cursos</a></div>
+        <div class="overlay-button"><a href="https://wa.me/5551999495754" class="text-decoration-none text-white"><i class="fas fa-headphones"></i> Suporte </a></div>
+        <div class="overlay-button text-white" onclick="excluirConta()"><i class="fas fa-cog"></i> Excluir Conta</div>
+        <div id="red" class="overlay-button text-red" onclick="sair()"><i class="fa fa-sign-out" ></i> Sair</div>
+      </div>
+    </div>
+  
+    <div id="config-modal">
+      <div class="config-modal-content">
+        <button onclick="excluirConta()">Excluir Conta</button>
+        <button class="sair" onclick="sair()">Sair</button>
+      </div>
+    </div>
 
-          const carouselContainer =
-            document.getElementById("carousel-container");
-          const coursesContainer = document.getElementById("courses-container");
-
-          // Clear existing content
-          carouselContainer.innerHTML = "";
-          coursesContainer.innerHTML = "";
-
-          // Populate carousel
-          courses.forEach((course) => {
-            const carouselItem = document.createElement("div");
-            carouselItem.className = "item";
-            carouselItem.innerHTML = `<img src="${course.imageUrl}" alt="${course.title}">`;
-            carouselContainer.appendChild(carouselItem);
-          });
-
-          // Populate course cards
-          courses.forEach((course) => {
-            const courseCard = document.createElement("div");
-            courseCard.className =
-              "course-card bg-white p-3 rounded shadow-sm d-flex gap-3";
-            courseCard.innerHTML = `
-            <div class="course-image bg-secondary bg-opacity-10 rounded" style="width: 100px; height: 100px; background-image: url('${course.imageUrl}'); background-size: cover;"></div>
-            <div class="flex-grow-1">
-              <h5 class="mb-1">${course.title}</h5>
-              <p class="small text-muted">${course.description}</p>
-              <a href="./detalhes_curso.html?id=${course.id}" class="btn btn-outline-primary btn-sm">Ver Curso</a>
-              <div class="mt-2 d-flex align-items-center gap-3">
-                <div class="like-counter d-flex align-items-center gap-1">
-                  <i class="fas fa-thumbs-up like-btn"></i>
-                  <span class="like-count">0</span>
-                </div>
-                <div class="dislike-counter d-flex align-items-center gap-1">
-                  <i class="fas fa-thumbs-down dislike-btn"></i>
-                  <span class="dislike-count">0</span>
-                </div>
-              </div>
-            </div>
-            <div class="align-self-start ms-auto">
-              <i class="far fa-star favorite-icon"></i>
-            </div>
-          `;
-            coursesContainer.appendChild(courseCard);
-          });
-        } catch (error) {
-          console.error("Error loading courses:", error);
-        }
-      }
-
-      // Load courses on page load
-      document.addEventListener("DOMContentLoaded", loadCourses);
-    </script>
+    <script src="./js/scripIndex.js"></script>
     <script src="./ipt.js"></script>
     <script src="./js/jquery.min.js"></script>
     <script src="./js/owl.carousel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./js/script.js"></script>
     <script src="./js/carousel.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
   </body>
 </html>
