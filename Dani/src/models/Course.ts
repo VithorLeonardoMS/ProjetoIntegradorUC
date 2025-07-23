@@ -11,6 +11,8 @@ import { IClasses } from "../interfaces/IClasses";
 import { Classes } from "./Classes";
 import { Reaction } from "./Reaction";
 import { User } from "./User";
+import { IUser } from "../interfaces/IUser";
+import { IReaction } from "../interfaces/IReaction";
 
 @Entity("courses")
 export class Course implements ICourse {
@@ -34,10 +36,10 @@ export class Course implements ICourse {
   externalLink?: string;
 
   @OneToMany(() => Reaction, (reaction) => reaction.course )
-  reactions:Reaction[];
+  reactions:IReaction[];
 
   @ManyToOne(() => User, (user:User) => user.createdCourses)
-  userCreator:User
+  userCreator:IUser;
 
   // @Column({type:"date", nullable:false})
   // public data:Date;

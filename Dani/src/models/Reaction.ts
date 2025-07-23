@@ -13,6 +13,8 @@ import {
     JoinTable
  } from 'typeorm';
 import { User } from './User';
+import { IClasses } from '../interfaces/IClasses';
+import { ICourse } from '../interfaces/ICourse';
   
 
 export class Reaction{
@@ -30,10 +32,10 @@ export class Reaction{
     reacao: "like" | "dislike";
 
     @ManyToOne(() => Course, (course) => course.reactions, { nullable:true })
-    course?:Course;
+    course?:ICourse;
 
-    @ManyToOne(() => Course, (classes) => classes.reactions, { nullable:true })
-    classes?:Classes;
+    @ManyToOne(() => Classes, (classes) => classes.reactions, { nullable:true })
+    classes?:IClasses;
 
     constructor(user:User, reacao:"like" | "dislike"){
         this.user = user;

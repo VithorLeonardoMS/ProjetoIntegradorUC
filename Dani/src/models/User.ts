@@ -11,6 +11,8 @@ import {
 import bcrypt from "bcryptjs";
 import { Reaction } from "./Reaction";
 import { Course } from "./Course";
+import { ICourse } from "../interfaces/ICourse";
+import { IReaction } from "../interfaces/IReaction";
 
 @Entity("users")
 export class User {
@@ -32,10 +34,10 @@ export class User {
   private _previousPassword: string;
 
   @OneToMany( () => Course, (course) => course.userCreator)
-  createdCourses:Course[]
+  createdCourses:ICourse[]
 
   @OneToMany(() => Reaction, (reaction) => reaction.user)
-  reactions: Reaction[]
+  reactions: IReaction[]
 
   constructor(name: string, email: string, password: string) {
     this.name = name;

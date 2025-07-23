@@ -1,4 +1,5 @@
-import { ICourse, IRequestCourse } from "../interfaces/ICourse";
+import { ICourse, IRequestUser } from "../interfaces/ICourse";
+import { IUser } from "../interfaces/IUser";
 import { ClassesRepository } from "../repositories/ClassesRepository";
 import { UserRepository } from "../repositories/UserRepository";
 import { AppError } from "../utils/AppError";
@@ -12,7 +13,7 @@ export class UserService {
     //this.classRepository = new ClassesRepository();
   }
 
-  async createUser(data: IRequestCourse): Promise<ICourse> {
+  async createUser(data: IRequestUser): Promise<ICourse> {
     this.validateUserData(data);
     // Obtenha os IDs das aulas e busque as aulas correspondentes no banco
     let classes;
@@ -20,12 +21,14 @@ export class UserService {
       classes = await this.classRepository.findByIds(data.classesId); // Supondo que exista um repositório para Classes
     }
 
-    const courseData = {
-      title: data.title,
-      description: data.description,
-      imageUrl: data.imageUrl,
-      externalLink: data.externalLink,
-      classes: classes, // Atribui as aulas encontradas ao curso
+    const userData:IUser = {
+      id?: data;//Continuar
+      name: string;
+      email: string;
+      password: string;
+      profileUrl?: string;
+      createdCourses: ICourse[],
+      reactions: IReaction[]
     };
     return await this.userRepository.create(courseData);
   }
@@ -40,7 +43,7 @@ export class UserService {
     return course;
   }
 
-  async updateUser(id: number, data: IRequestCourse): Promise<ICourse> {
+  async updateUser(id: number, data: IRequestUser): Promise<ICourse> {
     this.validateUserData(data);
     // Obtenha os IDs das aulas e busque as aulas correspondentes no banco
     let classes;
@@ -61,7 +64,7 @@ export class UserService {
   /**
    * Valida os dados do usuário, garantindo que estejam corretos.
    */
-  private validateUserData(data: IRequestCourse): void {
+  private validateUserData(data: IRequestUser): void {
     if (!data.title || data.title.trim() === "") {
       throw new AppError("Title is required", 400);
     }

@@ -25,9 +25,10 @@ export class CourseService {
       classes = await this.classRepository.findByIds(data.classesId); // Supondo que exista um repositório para Classes
     }
 
-    let userCreator;
-    if(data.userId){
-      userCreator = await this.userRepository.findById(data.userId)
+    let userCreator = await this.userRepository.findById(data.userId)
+
+    if(!userCreator){
+      throw new AppError(`Error in CourseService.createCourse() -> User not found. userId: ${data.userId}`, 404)
     }
 
     const courseData:ICourse = {
@@ -63,12 +64,19 @@ export class CourseService {
       classes = await this.classRepository.findByIds(data.classesId); // Supondo que exista um repositório para Classes
     }
 
-    const courseData = {
+    let userCreator = await this.userRepository.findById(data.userId)
+
+    if(!userCreator){
+      throw new AppError(`Error in CourseService.createCourse() -> User not found. userId: ${data.userId}`, 404)
+    }
+
+    const courseData:ICourse = {
       title: data.title,
       description: data.description,
       imageUrl: data.imageUrl,
       externalLink: data.externalLink,
       classes: classes, // Atribui as aulas encontradas ao curso
+      userCreator: userCreator
     };
     return await this.courseRepository.update(id, courseData);
   }

@@ -1,4 +1,8 @@
+import { Course } from "../models/Course";
 import { IClasses } from "./IClasses";
+import { Reaction } from "../models/Reaction";
+import { ICourse } from "./ICourse";
+import { IReaction } from "./IReaction";
 
 export interface IUser {
   id?: number;
@@ -6,6 +10,8 @@ export interface IUser {
   email: string;
   password: string;
   profileUrl?: string;
+  createdCourses: ICourse[];
+  reactions: IReaction[];
 }
 
 export interface IRequestUser {
@@ -14,11 +20,17 @@ export interface IRequestUser {
   email: string;
   password: string;
   profileUrl?: string;  
+  createdCourses:number[],
+  reactions: number[]
 }
 
 export interface IUserRepository {
-  create(data: ICourse): Promise<ICourse>;
-  findById(id: number): Promise<ICourse | null>
-  update(id: number, data: ICourse): Promise<ICourse>;
+  create(data: IUser): Promise<IUser>;
+  findById(id: number): Promise<IUser | null>
+  update(id: number, data: IUser): Promise<IUser>;
   delete(id: number): Promise<void>;
+  //getReactions()            |
+  //getReactionById()         |
+  //getAllCreatedCourses()    |
+  //getCreatedCourseById()    | Implementar
 }
