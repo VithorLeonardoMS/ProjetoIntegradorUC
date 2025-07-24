@@ -2,15 +2,35 @@ import { Request, Response } from "express";
 import { AppDataSource } from "../database/connection";
 import { User } from "../models/User";
 import bcryptjs from "bcryptjs";
+import { UserService } from "../services/UserService";
+import { IRequestUser } from "../interfaces/IUser";
 
 const userRepository = AppDataSource.getRepository(User);
 
 export class UserController {
-  // Listar todos os usuários
-  async list(req: Request, res: Response) {
-    const users = await userRepository.find();
-    res.json(users);
-    return;
+  private userService: UserService
+
+  constructor(){
+    this.userService = new UserService();
+  }
+
+  /**
+   * @param req 
+   * @param res 
+   * @returns -> Retorna o usuario criado
+   */
+  async create(req: Request, res: Response):Promise<Response> {
+    const userData: IRequestUser = req.body;
+    
+    const user = await this.userService.createUser(userData);
+
+    return res.status(201).json(user)
+  }
+  
+
+  async findAll(req: Request, res: Response):Promise<Response> {
+    const users = await this.userService.getAllUsers();
+    return res.json(users);
   }
 
   async login(req: Request, res: Response) {
@@ -35,76 +55,30 @@ export class UserController {
   }
   
   
-  // Criar novo usuário
-  async create(req: Request, res: Response) {
-    const { name, email, password } = req.body;
-
-    if (!name || !email || !password) {
-      res.status(400).json({ message: "Todos os campos são necessários!" });
-      return;
-    }
-
-    const user = new User(name, email, password);
-    const newUser = await userRepository.create(user);
-    await userRepository.save(newUser);
-
-    res
-      .status(201)
-      .json({ message: "Usuário criado com sucesso", user: newUser });
-    return;
-  }
 
   // Buscar usuário por ID
-  async show(req: Request, res: Response) {
+  async findById(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
-
-    const user = await userRepository.findOneBy({ id: Number(id) });
-
-    if (!user) {
-      res.status(404).json({ message: "Usuário não encontrado" });
-      return;
-    }
-
-    res.json(user);
-    return;
+    const user = await this.userService.getUserById(Number(id));
+    return res.json(user)
   }
 
   // Atualizar usuário
-  async update(req: Request, res: Response) {
+  async update(req: Request, res: Response):Promise<Response> {
     const { id } = req.params;
-    const { name, email, password } = req.body;
-
-    const user = await userRepository.findOneBy({ id: Number(id) });
-
-    if (!user) {
-      res.status(404).json({ message: "Usuário não encontrado" });
-      return;
-    }
-
-    user.name = name;
-    user.email = email;
-    user.password = password;
-
-    await userRepository.save(user);
-
-    res.json(user);
-    return;
+    const courseData: IRequestUser = req.body;
+    const course = await this.userService.updateUser(
+      Number(id),
+      courseData
+    );
+    return res.json(course);
   }
 
   // Deletar usuário
-  async delete(req: Request, res: Response) {
+  async delete(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
-
-    const user = await userRepository.findOneBy({ id: Number(id) });
-
-    if (!user) {
-      res.status(404).json({ message: "Usuário não encontrado" });
-      return;
-    }
-
-    await userRepository.remove(user);
-
-    res.status(204).send();
-    return;
+    await this.userService.deleteUser(Number(id));
+    return res.status(204).send();
   }
+
 }

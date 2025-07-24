@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { Classes } from "../models/Classes"; // Certifique-se de que o caminho esteja correto
 import { AppDataSource } from "../database/connection"; // Ajuste conforme necessário
 import { IClasses, IClassesRepository } from "../interfaces/IClasses";
@@ -22,7 +22,9 @@ export class ClassesRepository implements IClassesRepository {
   }
 
   async findByIds(ids: number[]): Promise<IClasses[]> {
-    return await this.repository.findByIds(ids); // Retorna as aulas correspondentes aos IDs fornecidos
+    return await this.repository.findBy({
+      id: In([ids])
+    }); // Retorna as aulas correspondentes aos IDs fornecidos
   }
 
   async findAll(): Promise<IClasses[]> {

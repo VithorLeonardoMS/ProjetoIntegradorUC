@@ -22,14 +22,11 @@ export class Reaction{
     @PrimaryGeneratedColumn()
     id!:number
 
-    @Column()
-    idUser:number;
-
     @ManyToOne(() => User, (user:User) => user.reactions)
     user:User
 
     @Column({type:'varchar', length: 7})
-    reacao: "like" | "dislike";
+    reaction: "like" | "dislike";
 
     @ManyToOne(() => Course, (course) => course.reactions, { nullable:true })
     course?:ICourse;
@@ -39,7 +36,7 @@ export class Reaction{
 
     constructor(user:User, reacao:"like" | "dislike"){
         this.user = user;
-        this.reacao = reacao;
+        this.reaction = reacao;
     }
     
 }

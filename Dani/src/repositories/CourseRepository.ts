@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
+import { Repository, In } from "typeorm";
 import { ICourse, ICourseRepository } from "../interfaces/ICourse";
 import { Course } from "../models/Course";
 import { AppDataSource } from "../database/connection";
@@ -24,6 +24,19 @@ export class CourseRepository implements ICourseRepository {
     });
   }
 
+  async findByIds(ids: number[]): Promise<ICourse[]> {
+    return await this.repository.find({
+      where:{
+        id: In([ids])//É um operador que permite buscar todos os registros cujo campo esteja dentro de uma lista de valores.
+      },
+      relations: ["classes"],
+    })
+  }
+
+  /**
+   * 
+   * @returns Retorna todos os Courses e suas relações.
+   */
   async findAll(): Promise<ICourse[]> {
     return await this.repository.find({ relations: ["classes"] });
   }

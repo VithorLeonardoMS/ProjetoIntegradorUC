@@ -1,17 +1,21 @@
 import { ICourse } from "./ICourse";
 import { IClasses } from "./IClasses";
+import { IUser } from "./IUser";
 
 export interface IReaction {
   id?: number;
   user: IUser;
-  course: ICourse;
+  course?: ICourse;
+  classe?: IClasses;
+  reaction: "like" | "dislike"
 }
 
 export interface IRequestReaction {
-  title: string;
-  description: string;
-  url: string;
-  courseId: number; // Para receber o ID do curso associado
+  id?: number;
+  userId: number;
+  courseId?: number; 
+  classeId?: number;
+  reaction: "like" | "dislike"
 }
 
 export interface IReactionRepository {
@@ -21,4 +25,5 @@ export interface IReactionRepository {
   findAll(): Promise<IClasses[]>;
   update(id: number, data: IClasses): Promise<IClasses>;
   delete(id: number): Promise<void>;
+  
 }

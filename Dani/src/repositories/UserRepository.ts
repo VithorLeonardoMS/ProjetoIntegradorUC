@@ -23,6 +23,10 @@ export class UserRepository implements IUserRepository {
       relations: ["classes, course"],
     });
   }
+  
+  async findAll(): Promise<IUser[]> {
+    return await this.repository.find({ relations: ["courses, classe, user, reaction"] });
+  }
 
   async update(id: number, data: IUser): Promise<IUser> {
     const result = await this.repository.update(id, data);

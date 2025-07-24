@@ -20,8 +20,8 @@ export interface IRequestUser {
   email: string;
   password: string;
   profileUrl?: string;  
-  createdCourses:number[],
-  reactions: number[]
+  createdCoursesIds:number[],
+  reactionsIds: number[]
 }
 
 export interface IUserRepository {

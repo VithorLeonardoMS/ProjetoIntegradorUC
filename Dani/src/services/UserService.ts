@@ -1,59 +1,85 @@
-import { ICourse, IRequestUser } from "../interfaces/ICourse";
-import { IUser } from "../interfaces/IUser";
+import { ICourse, IRequestCourse } from "../interfaces/ICourse";
+import { IUser, IRequestUser } from "../interfaces/IUser";
+import { Reaction } from "../models/Reaction";
+import { ReactionRepository } from "../repositories/ReactionRespository";
 import { ClassesRepository } from "../repositories/ClassesRepository";
+import { CourseRepository } from "../repositories/CourseRepository";
 import { UserRepository } from "../repositories/UserRepository";
 import { AppError } from "../utils/AppError";
 
 export class UserService {
   private userRepository: UserRepository;
-  //private classRepository: ClassesRepository;
+  private courseRepository: CourseRepository;
+  private reactionRepository: ReactionRepository;
 
   constructor() {
     this.userRepository = new UserRepository();
-    //this.classRepository = new ClassesRepository();
+    this.courseRepository = new CourseRepository();
   }
 
-  async createUser(data: IRequestUser): Promise<ICourse> {
+  async createUser(data: IRequestUser): Promise<IUser> {
     this.validateUserData(data);
-    // Obtenha os IDs das aulas e busque as aulas correspondentes no banco
-    let classes;
-    if (data.classesId && data.classesId.length > 0) {
-      classes = await this.classRepository.findByIds(data.classesId); // Supondo que exista um repositório para Classes
+
+    let createdCourses;
+    if (data.createdCoursesIds && data.createdCoursesIds.length > 0) {
+      createdCourses = await this.courseRepository.findByIds(data.createdCoursesIds);
+    }
+
+    let reactions;
+    if (data.reactionsIds && data.reactionsIds.length > 0) {
+      createdCourses = await this.reactionRepository.findByIds(data.reactionsIds);
     }
 
     const userData:IUser = {
-      id?: data;//Continuar
-      name: string;
-      email: string;
-      password: string;
-      profileUrl?: string;
-      createdCourses: ICourse[],
-      reactions: IReaction[]
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      profileUrl: data.profileUrl,
+      createdCourses: createdCourses? createdCourses : [],
+      reactions: reactions? reactions : []
     };
-    return await this.userRepository.create(courseData);
+    return await this.userRepository.create(userData);
   }
 
-  async getUserById(id: number): Promise<ICourse> {
-    const course = await this.userRepository.findById(id);
+  async getUserById(id: number): Promise<IUser> {
+    const user = await this.userRepository.findById(id);
 
-    if (!course) {
-      throw new AppError("Course not found", 404);
+    if (!user) {
+      throw new AppError("User not found", 404);
     }
 
-    return course;
+    return user;
   }
 
-  async updateUser(id: number, data: IRequestUser): Promise<ICourse> {
+  async getAllUsers(): Promise<IUser[]> {
+    return await this.userRepository.findAll();
+  }
+
+  async updateUser(id: number, data: IRequestUser): Promise<IUser> {
     this.validateUserData(data);
-    // Obtenha os IDs das aulas e busque as aulas correspondentes no banco
-    let classes;
-    if (data.classesId && data.classesId.length > 0) {
-      classes = await this.classRepository.findByIds(data.classesId); // Supondo que exista um repositório para Classes
+
+    let createdCourses;
+    if (data.createdCoursesIds && data.createdCoursesIds.length > 0) {
+      createdCourses = await this.courseRepository.findByIds(data.createdCoursesIds);
     }
+
+    let reactions;
+    if (data.reactionsIds && data.reactionsIds.length > 0) {
+      createdCourses = await this.reactionRepository.findByIds(data.reactionsIds);
+    }
+
 
     const userData:IUser = {
-        
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      profileUrl: data.profileUrl,
+      createdCourses: createdCourses? createdCourses : [],
+      reactions: reactions? reactions : []
     };
+
     return await this.userRepository.update(id, userData);
   }
 
@@ -65,15 +91,15 @@ export class UserService {
    * Valida os dados do usuário, garantindo que estejam corretos.
    */
   private validateUserData(data: IRequestUser): void {
-    if (!data.title || data.title.trim() === "") {
+    if (!data.name || data.name.trim() === "") {
       throw new AppError("Title is required", 400);
     }
 
-    if (!data.description || data.description.trim() === "") {
-      throw new AppError("Description is required", 400);
+    if (!data.email || data.email.trim() === "") {
+      throw new AppError("Email is required", 400);
     }
 
-    if (!data.imageUrl || data.imageUrl.trim() === "") {
+    if (!data.password || data.password.trim() === "") {
       throw new AppError("Image URL is required", 400);
     }
   }
