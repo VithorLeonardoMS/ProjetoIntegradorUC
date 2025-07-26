@@ -5,3 +5,4 @@ Dani/.coderignore
 Dani/node_modules/
 Dani/dist/
 Dani/coverage/
+.DS_Store
